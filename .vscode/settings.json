@@ -1,0 +1,6 @@
+{
+  "sonarlint.connectedMode.project": {
+    "connectionId": "next-starter",
+    "projectKey": "next-starter_next-starter"
+  }
+}
