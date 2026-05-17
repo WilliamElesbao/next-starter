@@ -1,8 +1,11 @@
+import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
+import type Stripe from "stripe";
 import { db } from "@/database/prisma-connection";
 import { env } from "@/env";
+import { stripeClient } from "../stripe";
 
 export const auth = betterAuth({
   database: prismaAdapter(db, {
@@ -40,7 +43,29 @@ export const auth = betterAuth({
       prompt: "select_account",
     },
   },
-  plugins: [nextCookies()],
+  plugins: [
+    stripe({
+      stripeClient,
+      stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
+      createCustomerOnSignUp: true,
+      subscription: {
+        enabled: true,
+        plans: async () => {
+          // Fetch directly from Stripe
+          const { data } = await stripeClient.products.list({
+            active: true,
+            expand: ["data.default_price"],
+          });
+
+          return data.map((product) => ({
+            name: product.name.toLowerCase(), // match your needs
+            priceId: (product.default_price as Stripe.Price).id,
+          }));
+        },
+      },
+    }),
+    nextCookies(),
+  ],
 });
 
 export type SessionResponse = typeof auth.$Infer.Session;

@@ -24,6 +24,8 @@ model User {
   sessions             Session[]
   accounts             Account[]
 
+  stripeCustomerId String?
+
   @@unique([email])
   @@map("user")
 }
@@ -74,4 +76,26 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Subscription {
+  id                   String    @id
+  plan                 String
+  referenceId          String
+  stripeCustomerId     String?
+  stripeSubscriptionId String?
+  status               String?   @default("incomplete")
+  periodStart          DateTime?
+  periodEnd            DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  cancelAtPeriodEnd    Boolean?  @default(false)
+  cancelAt             DateTime?
+  canceledAt           DateTime?
+  endedAt              DateTime?
+  seats                Int?
+  billingInterval      String?
+  stripeScheduleId     String?
+
+  @@map("subscription")
 }

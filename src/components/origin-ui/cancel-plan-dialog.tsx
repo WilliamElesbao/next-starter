@@ -19,7 +19,7 @@ import { useCancelSubscription } from "@/hooks/stripe/useSubscription";
 
 const PHRASE = "Yes, I'd like to cancel my subscription";
 
-export default function CancelSubscriptionDialog() {
+export const CancelSubscriptionDialog = () => {
   const { onSubmit, isPending, isSuccess } = useCancelSubscription();
 
   const [inputValue, setInputValue] = useState("");

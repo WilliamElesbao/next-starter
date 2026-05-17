@@ -1,24 +1,20 @@
-// import type { GetStripeSubscriptionDetailsResponse } from "@repo/api/generated/api/types.gen";
+import type { Subscription } from "@better-auth/stripe";
 import Link from "next/link";
 import * as IconsSi from "rocketicons/si";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LanguageSwitcher } from "./language-switcher";
-// import CancelSubscriptionDialog from "./origin-ui/cancel-plan-dialog";
+import { CancelSubscriptionDialog } from "./origin-ui/cancel-plan-dialog";
 import { ThemeToggle } from "./theme-toggle";
 
-export function SiteHeader(
-//   {
-//   subscription,
-// }: Readonly<{
-//   subscription?: 
-//   GetStripeSubscriptionDetailsResponse |
-//    null;
-// }>
-) {
-  // const shouldShowRevokeButton =
-  //   subscription?.hasActiveSubscription && !subscription?.cancel_at_period_end;
+interface SiteHeaderProps {
+  subscription?: Subscription;
+}
+
+export function SiteHeader({ subscription }: Readonly<SiteHeaderProps>) {
+  const shouldShowRevokeButton =
+    subscription?.status === "active" && !subscription?.cancelAt;
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -40,7 +36,7 @@ export function SiteHeader(
             </Link>
           </Button>
 
-          {/* {shouldShowRevokeButton && <CancelSubscriptionDialog />} */}
+          {shouldShowRevokeButton && <CancelSubscriptionDialog />}
 
           <LanguageSwitcher />
           <ThemeToggle />

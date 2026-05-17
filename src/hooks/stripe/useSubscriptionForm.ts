@@ -1,8 +1,8 @@
+import type { Subscription } from "@better-auth/stripe";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-// import { useGetStripeSubscriptionDetails } from "./stripe.queries";
 import { useSubscription, useUpdateSubscription } from "./useSubscription";
 
 const formSchema = z.object({
@@ -18,9 +18,11 @@ export type SubscriptionFormValues = z.infer<typeof formSchema>;
  *
  * @returns Object containing form instance, submit handler, loading state, and button disable state
  */
-export const useSubscriptionForm = () => {
-  // const { data: subscriptionDetails } = useGetStripeSubscriptionDetails();
-
+export const useSubscriptionForm = ({
+  subscription,
+}: {
+  subscription?: Subscription;
+}) => {
   const form = useForm<SubscriptionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -30,42 +32,39 @@ export const useSubscriptionForm = () => {
     mode: "all",
   });
 
-  // useEffect(() => {
-  //   form.reset({
-  //     priceId: subscriptionDetails?.plan?.priceId ?? "free",
-  //     planName: subscriptionDetails?.product?.name ?? "Free",
-  //   });
-  // }, [subscriptionDetails, form]);
+  useEffect(() => {
+    form.reset({
+      priceId: subscription?.priceId ?? "free",
+      planName: subscription?.plan ?? "free",
+    });
+  }, [subscription, form]);
 
-  const { 
-    // onSubmit: subscriptionOnSubmit,
-     isPending: isSubscriptionPending } =
+  const { onSubmit: subscriptionOnSubmit, isPending: isSubscriptionPending } =
     useSubscription();
   const {
-    // onSubmit: updateSubscriptionOnSubmit,
+    onSubmit: updateSubscriptionOnSubmit,
     isPending: isUpdateSubscriptionPending,
-  } = useUpdateSubscription();
+  } = useUpdateSubscription({ subscription });
 
-  // const onSubmit = subscriptionDetails?.hasActiveSubscription
-  //   ? updateSubscriptionOnSubmit
-  //   : subscriptionOnSubmit;
+  const onSubmit = subscription?.priceId
+    ? updateSubscriptionOnSubmit
+    : subscriptionOnSubmit;
 
   const selectedPriceId = useWatch({
     control: form.control,
     name: "priceId",
     defaultValue: "free",
   });
-  // const currentPriceId = subscriptionDetails?.plan?.priceId;
-  // const isSamePlanSelected = selectedPriceId === currentPriceId;
+  const currentPriceId = subscription?.priceId;
+  const isSamePlanSelected = selectedPriceId === currentPriceId;
   const isFreePlanSelected = selectedPriceId === "free";
   const isLoading = isSubscriptionPending || isUpdateSubscriptionPending;
   const disableChangePlanButton =
-    // isSamePlanSelected || 
-    isFreePlanSelected || isLoading;
+    isSamePlanSelected || isFreePlanSelected || isLoading;
 
   return {
     form,
-    // onSubmit,
+    onSubmit,
     isLoading,
     disableChangePlanButton,
   };

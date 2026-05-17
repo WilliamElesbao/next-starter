@@ -1,10 +1,8 @@
 "use client";
 
-// import type {
-//   GetStripeProductsResponse,
-//   GetStripeSubscriptionDetailsResponse,
-// } from "@repo/api/generated/api/types.gen";
+import type { Subscription } from "@better-auth/stripe";
 import { CheckIcon, RefreshCcwIcon } from "lucide-react";
+import type { Plan } from "@/actions/plans.actions";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -14,32 +12,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-// import { Label } from "@/components/ui/label";
-// import { RadioGroup,
-//   RadioGroupItem
-//  } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useDialog } from "@/context/dialog.context";
 import { useSubscriptionForm } from "@/hooks/stripe/useSubscriptionForm";
-// import { formatPrice } from "@/utils";
-import {
-  Form,
-  // FormField
-} from "../ui/form";
-// import Badge from "./badge";
+import { Form, FormField } from "../ui/form";
+import { Badge } from "./badge";
+
+interface ChoosePlanDialogProps {
+  plans?: Plan[];
+  subscription?: Subscription;
+}
 
 export const ChoosePlanDialog = ({
-  products,
+  plans,
   subscription,
-}: {
-  products?: //  GetStripeProductsResponse
-  null;
-  subscription?: //  GetStripeSubscriptionDetailsResponse |
-  null;
-}) => {
-  const { form,
-    //  onSubmit,
-      isLoading, disableChangePlanButton } =
-    useSubscriptionForm();
+}: ChoosePlanDialogProps) => {
+  const { form, onSubmit, isLoading, disableChangePlanButton } =
+    useSubscriptionForm({ subscription });
   const { dialogIsOpen, setDialogIsOpen } = useDialog();
 
   return (
@@ -54,7 +44,7 @@ export const ChoosePlanDialog = ({
           </div>
           <DialogHeader className="relative">
             <DialogTitle className="text-left">Change your plan</DialogTitle>
-            {/* <Badge text={subscription?.product?.name ?? "Free"} /> */}
+            <Badge text={subscription?.plan ?? "Free"} />
             <DialogDescription className="text-left">
               Pick one of the following plans.
             </DialogDescription>
@@ -63,11 +53,11 @@ export const ChoosePlanDialog = ({
         <Form {...form}>
           <form
             className="space-y-5"
-            // onSubmit={form.handleSubmit(onSubmit, (err) => {
-            //   console.error("[ChoosePlanDialog] Form submission error:", err);
-            // })}
+            onSubmit={form.handleSubmit(onSubmit, (err) => {
+              console.error("[ChoosePlanDialog] Form submission error:", err);
+            })}
           >
-            {/* <FormField
+            <FormField
               control={form.control}
               name="priceId"
               render={({ field }) => (
@@ -76,22 +66,22 @@ export const ChoosePlanDialog = ({
                   value={field.value ?? "free"}
                   onValueChange={(value) => {
                     field.onChange(value);
-                    const selectedProduct = products?.find(
-                      (product) => product.id === value,
+                    const selectedPlan = plans?.find(
+                      (plan) => plan.id === value,
                     );
-                    if (selectedProduct) {
-                      form.setValue("planName", selectedProduct.planName);
+                    if (selectedPlan) {
+                      form.setValue("planName", selectedPlan.planName);
                     }
                   }}
                 >
-                  {/* Radio card #1 * /}
+                  {/* Radio card #1 */}
                   <div className="border-input has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-accent relative flex w-full items-center gap-2 rounded-md border px-4 py-3 shadow-xs outline-none">
-                    {/* <RadioGroupItem
+                    <RadioGroupItem
                       value="free"
                       id={"free"}
                       className="order-1 after:absolute after:inset-0"
-                      disabled={!subscription?.plan?.priceId}
-                    /> * /}
+                      disabled={!subscription?.priceId}
+                    />
                     <div className="grid grow gap-1">
                       <Label htmlFor={"free"}>Free</Label>
                       <p id={"free"} className="text-muted-foreground text-xs">
@@ -100,35 +90,36 @@ export const ChoosePlanDialog = ({
                     </div>
                   </div>
 
-                  {/* {products
-                    ?.filter((product) => product.currency === "usd")
-                    .map((product) => (
-                      <div
-                        key={product.id}
-                        className="border-input has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-accent relative flex w-full items-center gap-2 rounded-md border px-4 py-3 shadow-xs outline-none"
-                      >
-                        <RadioGroupItem
-                          value={product.id}
-                          id={product.id}
-                          className="order-1 after:absolute after:inset-0"
-                        />
-                        <div className="grid grow gap-1">
-                          <Label htmlFor={product.id}>{product.planName}</Label>
-                          <p
-                            id={`${product.id}-description`}
-                            className="text-muted-foreground text-xs"
-                          >
-                            {formatPrice(product)}/
-                            {product?.recurring?.interval_count === 1
-                              ? product.recurring.interval
-                              : `${product?.recurring?.interval_count} ${product?.recurring?.interval}s`}
-                          </p>
-                        </div>
+                  {plans?.map((plan) => (
+                    <div
+                      key={plan.id}
+                      className="border-input has-data-[state=checked]:border-primary/50 has-data-[state=checked]:bg-accent relative flex w-full items-center gap-2 rounded-md border px-4 py-3 shadow-xs outline-none"
+                    >
+                      <RadioGroupItem
+                        value={plan.id}
+                        id={plan.id}
+                        className="order-1 after:absolute after:inset-0"
+                      />
+                      <div className="grid grow gap-1">
+                        <Label htmlFor={plan.id}>
+                          {plan.planName.charAt(0).toUpperCase() +
+                            plan.planName.slice(1)}
+                        </Label>
+                        <p
+                          id={`${plan.id}-description`}
+                          className="text-muted-foreground text-xs"
+                        >
+                          {plan.price}/
+                          {plan?.recurring?.interval_count === 1
+                            ? plan.recurring.interval
+                            : `${plan?.recurring?.interval_count} ${plan?.recurring?.interval}s`}
+                        </p>
                       </div>
-                    ))} * /}
+                    </div>
+                  ))}
                 </RadioGroup>
               )}
-            /> */}
+            />
 
             <div className="space-y-3">
               <p>
