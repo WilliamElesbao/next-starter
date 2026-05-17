@@ -50,9 +50,7 @@ export function WelcomeEmail({ name, actionUrl }: Readonly<WelcomeEmailProps>) {
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-12 px-4 max-w-xl">
             {/* Logo/Brand area */}
-            <Text className="text-2xl font-bold text-black">
-              Next Starter
-            </Text>
+            <Text className="text-2xl font-bold text-black">Next Starter</Text>
 
             {/* Main heading */}
             <Heading className="text-2xl font-bold text-gray-900 mt-8">
@@ -87,8 +85,8 @@ export function WelcomeEmail({ name, actionUrl }: Readonly<WelcomeEmailProps>) {
 
             {/* Footer */}
             <Text className="text-sm text-gray-500">
-              If you didn&apos;t set up Next Starter, you can safely ignore
-              this email.
+              If you didn&apos;t set up Next Starter, you can safely ignore this
+              email.
             </Text>
           </Container>
         </Body>

@@ -1,5 +1,3 @@
-// import type { GetStripeProductsResponse } from "@repo/api/generated/api/types.gen";
-
 /**
  * Formats a product price from cents to readable currency string.
  *
@@ -10,7 +8,6 @@ export const formatPrice = ({
   currency,
   price,
 }: {
-// : Pick<GetStripeProductsResponse[0], "currency" | "price">
   currency: "usd" | "brl";
   price: number | null | undefined;
 }): string => {
