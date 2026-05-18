@@ -3,11 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { useSubscription, useUpdateSubscription } from "./useSubscription";
+import { useUpgradeSubscription } from "./useSubscription";
 
 const formSchema = z.object({
   priceId: z.string(),
   planName: z.string(),
+  subscriptionId: z.string().optional(),
 });
 
 export type SubscriptionFormValues = z.infer<typeof formSchema>;
@@ -36,19 +37,15 @@ export const useSubscriptionForm = ({
     form.reset({
       priceId: subscription?.priceId ?? "free",
       planName: subscription?.plan ?? "free",
+      subscriptionId: subscription?.stripeSubscriptionId,
     });
   }, [subscription, form]);
 
-  const { onSubmit: subscriptionOnSubmit, isPending: isSubscriptionPending } =
-    useSubscription();
-  const {
-    onSubmit: updateSubscriptionOnSubmit,
-    isPending: isUpdateSubscriptionPending,
-  } = useUpdateSubscription({ subscription });
+  const { mutateAsync, isPending } = useUpgradeSubscription();
 
-  const onSubmit = subscription?.priceId
-    ? updateSubscriptionOnSubmit
-    : subscriptionOnSubmit;
+  const onSubmit = async (formValues: SubscriptionFormValues) => {
+    await mutateAsync({ formValues });
+  };
 
   const selectedPriceId = useWatch({
     control: form.control,
@@ -58,14 +55,13 @@ export const useSubscriptionForm = ({
   const currentPriceId = subscription?.priceId;
   const isSamePlanSelected = selectedPriceId === currentPriceId;
   const isFreePlanSelected = selectedPriceId === "free";
-  const isLoading = isSubscriptionPending || isUpdateSubscriptionPending;
   const disableChangePlanButton =
-    isSamePlanSelected || isFreePlanSelected || isLoading;
+    isSamePlanSelected || isFreePlanSelected || isPending;
 
   return {
     form,
     onSubmit,
-    isLoading,
+    isPending,
     disableChangePlanButton,
   };
 };

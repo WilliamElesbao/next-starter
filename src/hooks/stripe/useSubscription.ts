@@ -1,23 +1,22 @@
-import type { Subscription } from "@better-auth/stripe";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { useDialog } from "@/context/dialog.context";
 import { authClient } from "@/lib/better-auth/auth-client";
-import { delay } from "@/utils";
 import type { SubscriptionFormValues } from "./useSubscriptionForm";
 
 /**
- * Manages the creation of a new Stripe subscription with checkout redirect.
+ * Custom hook to handle subscription upgrade logic, including API interaction and user feedback.
+ * Utilizes react-query for mutation management and sonner for toast notifications.
  *
- * @returns Object containing onSubmit handler and isPending state
+ * @returns Object containing the onSubmit handler and mutation state (isPending, isSuccess, etc.)
  */
-export const useSubscription = () => {
-  const t = useTranslations("dashboard.toast.subscription");
+export const useUpgradeSubscription = () => {
+  const t = useTranslations("dashboard.toast");
   const { setDialogIsOpen } = useDialog();
 
-  const { mutateAsync, isPending } = useMutation({
+  const mutation = useMutation({
     mutationFn: async ({
       formValues,
     }: {
@@ -32,100 +31,64 @@ export const useSubscription = () => {
 
       return result;
     },
-    onSuccess: async () => {
-      toast.info(t("redirecting-to-stripe-for-subscription"), {
-        description: t("please-wait-while-we-set-up-your-subscription"),
-        position: "top-center",
-      });
-      await delay(2);
+    onMutate: ({ formValues }) => {
+      if (formValues.subscriptionId) {
+        toast.info(
+          t(
+            "update-subscription.redirecting-to-stripe-for-subscription-update",
+          ),
+          {
+            description: t(
+              "update-subscription.please-wait-while-we-update-your-subscription",
+            ),
+            position: "top-center",
+          },
+        );
+      } else {
+        toast.info(t("subscription.redirecting-to-stripe-for-subscription"), {
+          description: t(
+            "subscription.please-wait-while-we-set-up-your-subscription",
+          ),
+          position: "top-center",
+        });
+      }
     },
-    onError: (err) => {
-      console.error("[Hook][useSubscription] onError:", err);
-      toast.error(t("failed-to-create-subscription"), {
-        description: t("an-error-occurred-while-creating-your-subscription"),
-        position: "top-center",
+    onError: (error, variables, onMutateResult, context) => {
+      console.error("[Hook][useUpgradeSubscription] onSubmit error:", {
+        error,
+        variables,
+        onMutateResult,
+        context,
       });
+      if (variables.formValues.subscriptionId) {
+        toast.error(t("update-subscription.failed-to-update-subscription"), {
+          description: t(
+            "update-subscription.an-error-occurred-while-updating-your-subscription",
+          ),
+          position: "top-center",
+        });
+      } else {
+        toast.error(t("subscription.failed-to-create-subscription"), {
+          description: t(
+            "subscription.an-error-occurred-while-creating-your-subscription",
+          ),
+          position: "top-center",
+        });
+      }
     },
     onSettled: () => {
       setDialogIsOpen(false);
     },
   });
 
-  const onSubmit = useCallback(
-    async (data: SubscriptionFormValues) => {
-      await mutateAsync({ formValues: data });
-    },
-    [mutateAsync],
-  );
-
-  return {
-    onSubmit,
-    isPending,
-  };
+  return { ...mutation };
 };
 
 /**
- * Manages updates to an existing Stripe subscription.
+ * Custom hook to handle subscription cancellation logic, including API interaction and user feedback.
+ * Utilizes react-query for mutation management and sonner for toast notifications.
  *
- * @returns Object containing onSubmit handler and isPending state
- */
-export const useUpdateSubscription = ({
-  subscription,
-}: {
-  subscription?: Subscription;
-}) => {
-  const t = useTranslations("dashboard.toast.update-subscription");
-  const { setDialogIsOpen } = useDialog();
-
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async ({
-      formValues,
-    }: {
-      formValues: SubscriptionFormValues;
-    }) => {
-      const subscriptionId = subscription?.stripeSubscriptionId;
-
-      const result = await authClient.subscription.upgrade({
-        subscriptionId,
-        plan: formValues.planName,
-      });
-
-      return result;
-    },
-    onSuccess: async () => {
-      toast.success(t("subscription-updated-successfully"), {
-        description: t("your-subscription-has-been-updated"),
-        position: "top-center",
-      });
-      await delay(2);
-      setDialogIsOpen(false);
-    },
-    onError: (err) => {
-      console.error("[Hook][useUpdateSubscription] onSubmit error:", err);
-      toast.error(t("failed-to-update-subscription"), {
-        description: t("an-error-occurred-while-updating-your-subscription"),
-        position: "top-center",
-      });
-    },
-  });
-
-  const onSubmit = useCallback(
-    async (data: SubscriptionFormValues) => {
-      await mutateAsync({ formValues: data });
-    },
-    [mutateAsync],
-  );
-
-  return {
-    onSubmit,
-    isPending,
-  };
-};
-
-/**
- * Manages cancellation of an active Stripe subscription.
- *
- * @returns Object containing onSubmit handler and mutation state
+ * @returns Object containing the onSubmit handler and mutation state (isPending, isSuccess, etc.)
  */
 export const useCancelSubscription = () => {
   const t = useTranslations("dashboard.toast.cancel-subscription");
@@ -139,7 +102,7 @@ export const useCancelSubscription = () => {
       return result;
     },
     onSuccess: () => {
-      toast.info(t("your-subscription-has-been-canceled"), {
+      toast.info(t("redirecting-to-stripe-for-subscription-cancellation"), {
         description: t("you-will-not-be-charged-for-the-next-billing-cycle"),
         position: "top-center",
       });

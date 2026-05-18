@@ -47,13 +47,13 @@
         "an-error-occurred-while-creating-your-subscription": "An error occurred while creating your subscription. Please try again."
       },
       "update-subscription": {
-        "subscription-updated-successfully": "Subscription updated successfully!",
-        "your-subscription-has-been-updated": "Your subscription has been updated.",
+        "redirecting-to-stripe-for-subscription-update": "Redirecting to Stripe for subscription update...",
+        "please-wait-while-we-update-your-subscription": "Please wait while we update your subscription.",
         "failed-to-update-subscription": "Failed to update subscription.",
         "an-error-occurred-while-updating-your-subscription": "An error occurred while updating your subscription. Please try again."
       },
       "cancel-subscription": {
-        "your-subscription-has-been-canceled": "Your subscription has been canceled.",
+        "redirecting-to-stripe-for-subscription-cancellation": "Redirecting to Stripe for subscription cancellation...",
         "you-will-not-be-charged-for-the-next-billing-cycle": "You will not be charged for the next billing cycle\nBut you can still access your account until the end of the current period.",
         "failed-to-cancel-subscription": "Failed to cancel subscription.",
         "an-error-occurred-while-canceling-your-subscription": "An error occurred while canceling your subscription. Please try again."

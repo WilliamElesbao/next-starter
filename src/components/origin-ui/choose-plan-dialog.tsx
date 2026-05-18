@@ -28,7 +28,7 @@ export const ChoosePlanDialog = ({
   plans,
   subscription,
 }: ChoosePlanDialogProps) => {
-  const { form, onSubmit, isLoading, disableChangePlanButton } =
+  const { form, onSubmit, isPending, disableChangePlanButton } =
     useSubscriptionForm({ subscription });
   const { dialogIsOpen, setDialogIsOpen } = useDialog();
 
@@ -185,7 +185,7 @@ export const ChoosePlanDialog = ({
                 className="w-full"
                 disabled={disableChangePlanButton}
               >
-                {isLoading ? "Loading..." : "Change plan"}
+                {isPending ? "Loading..." : "Change plan"}
               </Button>
               <DialogClose asChild>
                 <Button type="button" variant="ghost" className="w-full">

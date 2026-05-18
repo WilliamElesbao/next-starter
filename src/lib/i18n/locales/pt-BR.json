@@ -47,13 +47,13 @@
         "an-error-occurred-while-creating-your-subscription": "Ocorreu um erro ao criar sua assinatura. Por favor, tente novamente."
       },
       "update-subscription": {
-        "subscription-updated-successfully": "Assinatura atualizada com sucesso!",
-        "your-subscription-has-been-updated": "Sua assinatura foi atualizada.",
+        "redirecting-to-stripe-for-subscription-update": "Redirecionando para Stripe para atualização da assinatura...",
+        "please-wait-while-we-update-your-subscription": "Por favor, aguarde enquanto atualizamos sua assinatura.",
         "failed-to-update-subscription": "Falha ao atualizar assinatura.",
         "an-error-occurred-while-updating-your-subscription": "Ocorreu um erro ao atualizar sua assinatura. Por favor, tente novamente."
       },
       "cancel-subscription": {
-        "your-subscription-has-been-canceled": "Sua assinatura foi cancelada.",
+        "redirecting-to-stripe-for-subscription-cancellation": "Redirecionando para Stripe para cancelamento da assinatura...",
         "you-will-not-be-charged-for-the-next-billing-cycle": "Você não será cobrado pelo próximo ciclo de cobrança\nMas você ainda pode acessar sua conta até o final do período atual.",
         "failed-to-cancel-subscription": "Falha ao cancelar assinatura.",
         "an-error-occurred-while-canceling-your-subscription": "Ocorreu um erro ao cancelar sua assinatura. Por favor, tente novamente."
