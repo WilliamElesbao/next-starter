@@ -64,9 +64,9 @@ steps:
       - typecheck
 
   - name: build
-    image: oven/bun:1.3.3
+    image: node:22-alpine
     commands:
-      - bun run build
+      - node --run build
     depends_on:
       - install
       - lint
