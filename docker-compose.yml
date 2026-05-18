@@ -1,27 +1,4 @@
 services:
-  # redis:
-  #   container_name: redis
-  #   image: redis:8.6-alpine
-  #   restart: always
-  #   ports:
-  #     - "6379:6379"
-  #   env_file:
-  #     - .env
-  #   command: redis-server --requirepass abcd1234
-  # volumes:
-  #   - ./.docker/redis:/data
-
-  # redis-commander:
-  #   image: rediscommander/redis-commander:latest
-  #   container_name: redis-commander
-  #   restart: always
-  #   ports:
-  #     - "8081:8081"
-  #   environment:
-  #     - REDIS_HOSTS=local:redis:6379:0:abcd1234
-  #   depends_on:
-  #     - redis
-
   database:
     image: postgres:latest
     container_name: next-starter-database
@@ -53,12 +30,3 @@ services:
       - .env
     depends_on:
       - database
-
-  # jaeger:
-  #   image: jaegertracing/all-in-one:latest
-  #   container_name: jaeger
-  #   ports:
-  #     - "16686:16686" # Jaeger UI
-  #     - "4318:4318" # OTLP HTTP receiver (traces)
-  #   environment:
-  #     - COLLECTOR_OTLP_ENABLED=true
