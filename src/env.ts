@@ -5,7 +5,6 @@ const envSchema = z.object({
   NEXT_PUBLIC_BASE_URL: z.url(),
   // Database and Redis
   DATABASE_URL: z.url().startsWith("postgresql://"),
-  REDIS_URL: z.string().startsWith("redis://"),
   // BetterAuth
   BETTER_AUTH_SECRET: z.string().min(1),
   BETTER_AUTH_URL: z.url(),
@@ -22,4 +21,4 @@ const envSchema = z.object({
   STRIPE_WEBHOOK_SECRET: z.string().min(1),
 });
 
-export const env = envSchema.parse(Bun.env);
+export const env = envSchema.parse(process.env);
