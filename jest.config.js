@@ -1,8 +1,8 @@
-const nextJest = require("next/jest")
+const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
   dir: "./",
-})
+});
 
 /** @type {import('jest').Config} */
 const customJestConfig = {
@@ -17,19 +17,14 @@ const customJestConfig = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
-  testMatch: [
-    "**/__tests__/**/*.[jt]s?(x)",
-    "**/?(*.)+(spec|test).[jt]s?(x)",
-  ],
+  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
   modulePathIgnorePatterns: [
     "<rootDir>/.next/",
     "<rootDir>/node_modules/",
     "<rootDir>/emails/",
   ],
-  transformIgnorePatterns: [
-    "node_modules/(?!(react-email|@react-email)/)",
-  ],
+  transformIgnorePatterns: ["node_modules/(?!(react-email|@react-email)/)"],
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
-}
+};
 
-module.exports = createJestConfig(customJestConfig)
+module.exports = createJestConfig(customJestConfig);
