@@ -24,6 +24,8 @@ steps:
 
   - name: prisma-generate
     image: oven/bun:1.3.3
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
     commands:
       - bun run db:generate
     depends_on:
@@ -35,6 +37,7 @@ steps:
       - bun tsc
     depends_on:
       - install
+      - prisma-generate
 
   - name: lint
     image: oven/bun:1.3.3
