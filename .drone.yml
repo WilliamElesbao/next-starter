@@ -72,3 +72,4 @@ steps:
       - lint
       - i18n-audit
       - typecheck
+      - tests
