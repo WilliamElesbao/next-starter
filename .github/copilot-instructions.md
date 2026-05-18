@@ -269,8 +269,8 @@ bun run ci                          # CI lint (Biome)
 ### Tests
 
 ```bash
-bun run test                        # Vitest
-bun run test:coverage               # Vitest with coverage
+bun run test                        # Jest
+bun run test:coverage               # Jest with coverage
 ```
 
 ### Infrastructure

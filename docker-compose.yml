@@ -4,8 +4,8 @@ services:
     container_name: next-starter-database
     environment:
       POSTGRES_DB: next-starter
-      POSTGRES_USER: docker
-      POSTGRES_PASSWORD: docker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     # volumes:
@@ -20,7 +20,7 @@ services:
     ports:
       - 5555:5555
     environment:
-      POSTGRES_URL: postgresql://docker:docker@database:5432/next-starter
+      POSTGRES_URL: postgresql://postgres:postgres@database:5432/next-starter
 
   stripe-webhook:
     image: stripe/stripe-cli:latest
