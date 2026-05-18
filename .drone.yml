@@ -55,9 +55,9 @@ steps:
       - install
 
   - name: tests
-    image: oven/bun:1.3.3
+    image: node:22-alpine
     commands:
-      - bun run test
+      - npx jest
     depends_on:
       - install
       - prisma-generate
