@@ -4,6 +4,10 @@ import { env } from "@/env";
 import { resend } from "@/lib/resend";
 import WelcomeEmail from "../../emails/src/templates/welcomeEmail";
 
+/**
+ * Sends a welcome email to a new user using the Resend email service.
+ * @returns An object indicating the success status and any error message if applicable.
+ */
 export async function sendWelcomeEmailAction() {
   const { error } = await resend.emails.send({
     from: env.EMAIL_FROM,

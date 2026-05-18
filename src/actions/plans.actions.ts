@@ -11,6 +11,10 @@ export interface Plan {
   recurring: Stripe.Price.Recurring | null;
 }
 
+/**
+ * Fetches active Stripe plans and normalizes the data for use in the application.
+ * @returns An object containing an array of normalized plans.
+ */
 export async function stripePlans(): Promise<{ plans: Plan[] }> {
   const { data } = await stripeClient.products.list({
     active: true,
