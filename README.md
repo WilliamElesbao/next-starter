@@ -1,36 +1,153 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ignite Starter
+Ignite Starter is a scalable fullstack monorepo starter for teams that want to bootstrap new products with a production-oriented baseline.
+It provides a ready-to-extend foundation for web, API, database, email, testing, and CI workflows.
 
-## Getting Started
+## Project overview
+Use this repository as a boilerplate to launch new applications quickly while keeping architecture and quality standards consistent from day one.
+The project is structured so business features can be added without rewriting core platform concerns.
 
-First, run the development server:
+## Architecture overview
+- `apps/web`: Next.js frontend (App Router) with i18n and shared UI consumption
+- `apps/backend`: thin API runtime entry point
+- `packages/backend-base`: backend business logic (plugins, services, DTOs, queue)
+- `packages/database`: Drizzle schema, migrations, and shared DB client
+- `packages/api`: generated API client from backend OpenAPI
+- `packages/emails`: React Email templates
+- `packages/ui`: shared UI package
+
+## Tech stack
+- Frontend: Next.js 16, React 19, Tailwind CSS v4, next-intl
+- Backend: Elysia + Bun
+- Data: PostgreSQL + Drizzle ORM
+- Auth: BetterAuth (email/password + Google OAuth)
+- Queue: BullMQ + Redis (email jobs)
+- Email: Resend + React Email templates
+- Testing: Vitest + coverage (v8)
+- Quality: Biome + TypeScript
+- CI: Drone CI + GitHub Actions + SonarCloud
+- Infra: Docker Compose (database, redis, stripe webhook forwarder, jaeger)
+
+## Monorepo structure
+```text
+apps/
+  backend/
+  web/
+packages/
+  api/
+  backend-base/
+  database/
+  emails/
+  typescript-config/
+  ui/
+docs/
+```
+
+## Development workflow
+1. Install dependencies.
+2. Configure environment files.
+3. Start infrastructure with Docker.
+4. Run database migrations.
+5. Start the apps in dev mode.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
+cp apps/backend/.env.example apps/backend/.env
+cp apps/web/.env.example apps/web/.env
+cp packages/database/.env.example packages/database/.env
+cp packages/backend-base/.env.example packages/backend-base/.env
+cp packages/api/.env.example packages/api/.env
+docker compose up -d
+(cd packages/database && bun db:migrate)
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Core commands
+```bash
+# Monorepo
+bun dev
+bun build
+bun check-types
+bun lint
+bun format
+bun check:all
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+# API client generation (backend must be running)
+(cd packages/api && bun run generate)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# i18n audit (web)
+(cd apps/web && bun run locale-check)
+(cd apps/web && bun run locale-unused)
+```
 
-## Learn More
+## Testing strategy
+Unit tests run with Vitest in:
+- `apps/web` (including sign-in and email hook tests)
+- `packages/backend-base` (including auth, email service, and BullMQ worker tests)
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+(cd apps/web && bun run test)
+(cd apps/web && bun test:coverage)
+(cd packages/backend-base && bun run test)
+(cd packages/backend-base && bun test:coverage)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Docker support
+The repository includes Dockerfiles for web and backend, with:
+- Next.js standalone runtime image for web
+- Non-root container execution
+- Backend image dependency on `packages/database` build artifacts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+See `docs/docker/deployment.md` for the complete build and run flow.
 
-## Deploy on Vercel
+## CI/CD overview
+- Drone CI (`.drone.yml`): install, i18n audit, typecheck, lint, tests, and build pipeline
+- GitHub Actions:
+  - `.github/workflows/sonar.yml` (SonarCloud scan)
+  - `.github/workflows/pr-review.yml` (Biome annotations)
+- SonarCloud project config in `sonar-project.properties`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Environment setup
+Environment files are per app/package, not global:
+- `apps/backend/.env`
+- `apps/web/.env`
+- `packages/database/.env`
+- `packages/backend-base/.env`
+- `packages/api/.env`
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Use `*.env.example` in each location as the base template.
+
+## Features
+### Ready
+- [x] Next.js web app
+- [x] Backend API
+- [x] Database package with Drizzle
+- [x] Shared API client package
+- [x] Shared UI package
+- [x] Email templates package
+- [x] BetterAuth authentication (email/password) + Google OAuth
+- [x] Stripe integration
+- [x] BullMQ email queue with Redis
+- [x] Unit tests with Vitest
+- [x] Test coverage setup
+- [x] Sign-in unit tests
+- [x] Email service and queue unit tests
+- [x] i18n audit scripts
+- [x] Docker infrastructure
+- [x] Backend and frontend Docker images
+- [x] Standalone Next.js build strategy
+- [x] Non-root container execution
+- [x] CI pipeline (Drone + GitHub Actions + SonarCloud)
+- [x] Database build dependency flow in container pipeline
+- [x] Documentation for setting up observability tools such as Jaeger and SigNoz
+
+### Planned / In progress
+- [ ] E2E tests with Playwright
+- [ ] Continuous Deployment (CD)
+
+## Documentation
+- `docs/README.md`
+- `docs/local-setup/local-setup.md`
+- `docs/docker/deployment.md`
+- `docs/ci-cd/README.md`
+- `docs/google/google-oauth-setup.md`
+- `docs/stripe/stripe-setup.md`
