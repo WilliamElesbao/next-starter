@@ -1,0 +1,65 @@
+kind: pipeline
+type: docker
+name: CI
+
+platform:
+  arch: arm64
+
+clone:
+  depth: 100
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+    - pull_request
+    - tag
+
+steps:
+  - name: install
+    image: oven/bun:1.3.3
+    commands:
+      - bun install --ignore-scripts
+
+  - name: lint
+    image: oven/bun:1.3.3
+    commands:
+      - bun biome ci .
+    depends_on:
+      - typecheck
+
+  - name: i18n-audit
+    image: oven/bun:1.3.3
+    commands:
+      - bun locale-check
+      - bun locale-unused
+    depends_on:
+      - install
+
+  - name: typecheck
+    image: oven/bun:1.3.3
+    commands:
+      - bun tsc
+    depends_on:
+      - install
+
+  # - name: tests
+  #   image: oven/bun:1.3.3
+  #   commands:
+  #     - bun run test
+  #   depends_on:
+  #     - install
+  #     - typecheck
+  #     - lint
+
+  - name: build
+    image: node:22-alpine
+    commands:
+      - bun run build
+    depends_on:
+      - install
+      - lint
+      - i18n-audit
+      - typecheck
+      - tests
