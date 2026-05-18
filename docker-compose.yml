@@ -20,7 +20,7 @@ services:
     ports:
       - 5555:5555
     environment:
-      POSTGRES_URL: postgresql://docker:docker@database:5432/next-starter
+      POSTGRES_URL: postgresql://postgres:postgres@database:5432/next-starter
 
   stripe-webhook:
     image: stripe/stripe-cli:latest

@@ -26,7 +26,7 @@ docker build -t next-starter .
 docker run --name next-starter \
   --env-file .env \
   -e NEXT_PUBLIC_BASE_URL=http://localhost:3000 \
-  -e DATABASE_URL=postgresql://docker:docker@host.docker.internal:5432/next-starter \
+  -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/next-starter \
   -p 3000:3000 \
   next-starter
 ```

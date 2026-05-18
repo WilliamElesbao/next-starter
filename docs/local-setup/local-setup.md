@@ -63,7 +63,7 @@ cp .env.example .env
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 # Database
-DATABASE_URL=postgresql://docker:docker@localhost:5432/next-starter
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/next-starter
 
 # BetterAuth
 BETTER_AUTH_SECRET=<generate a strong secret>
