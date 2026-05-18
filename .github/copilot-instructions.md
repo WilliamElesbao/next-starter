@@ -125,7 +125,7 @@ bun run test:coverage               # Vitest with coverage
 ### i18n
 
 ```bash
-bun run validate:i18n               # Validate translation files
+bun run locale-check               # Validate translation files
 bun run locale-unused               # Check unused i18n keys
 ```
 
