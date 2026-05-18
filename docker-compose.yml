@@ -11,7 +11,7 @@ services:
     # volumes:
     #   - ./.docker/postgres:/var/lib/postgresql/data
 
-  starter-studio:
+  prisma-studio:
     image: timothyjmiller/prisma-studio
     container_name: next-starter-prisma-studio
     depends_on:
@@ -22,7 +22,7 @@ services:
     environment:
       POSTGRES_URL: postgresql://docker:docker@database:5432/next-starter
 
-  stripe:
+  stripe-webhook:
     image: stripe/stripe-cli:latest
     container_name: next-starter-stripe-webhook
     command: listen --forward-to http://host.docker.internal:3000/api/auth/stripe/webhook
