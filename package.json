@@ -6,7 +6,7 @@
     "dev": "bun --bun next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest",
+    "test": "npx jest",
     "test:coverage": "jest --coverage",
     "lint": "biome check .",
     "lint:fix": "biome check --fix --unsafe .",
