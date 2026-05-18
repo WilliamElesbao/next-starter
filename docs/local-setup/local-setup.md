@@ -1,0 +1,305 @@
+<!-- @format -->
+
+# Local Setup Guide for Next Starter
+
+This guide describes the complete step-by-step process to run the project
+**locally** using Docker, Prisma, and Bun.
+
+> Follow the steps in order. At the end, you should be able to run `bun dev` and
+> test the app at `http://localhost:3000`.
+
+---
+
+## 1. Prerequisites
+
+Before starting, make sure you have installed on your machine:
+
+- **Git**
+- **Node.js 22+** (recommended if using `npm`/`npx`)
+- **[Bun](https://bun.sh/)** (recommended for this project)
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)** (with
+  Docker Compose)
+- **[Stripe CLI](https://stripe.com/docs/stripe-cli)** (for webhooks, if you
+  want to run outside the container)
+
+Quick verification:
+
+```bash
+node -v
+bun -v
+docker --version
+stripe --version
+```
+
+---
+
+## 2. Clone repository and install dependencies
+
+```bash
+# 1) Clone the project
+git clone git@github.com:WilliamElesbao/next-starter.git
+cd next-starter
+
+# 2) Install dependencies
+bun install
+```
+
+---
+
+## 3. Configure environment variables
+
+The project already has an example file: `.env.example`.
+
+1. Create the `.env` file at the root from the example:
+
+```bash
+cp .env.example .env
+```
+
+2. Open `.env` and fill in the values marked as `<your secret>`:
+
+```dotenv
+# Base URL
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
+# Database
+DATABASE_URL=postgresql://docker:docker@localhost:5432/next-starter
+
+# BetterAuth
+BETTER_AUTH_SECRET=<generate a strong secret>
+BETTER_AUTH_URL=http://localhost:3000
+
+# Google
+GOOGLE_CLIENT_ID=<copy from Google Cloud Console>
+GOOGLE_CLIENT_SECRET=<copy from Google Cloud Console>
+
+# Email (optional for local environment)
+RESEND_API_KEY=<if you have one>
+EMAIL_FROM=delivered@resend.dev
+EMAIL_TO=example@mail.com
+AUDIENCE_ID=<if you have one>
+
+# Stripe
+STRIPE_SECRET_KEY=<copy from Stripe account (test key)>
+STRIPE_WEBHOOK_SECRET=<copy from Stripe CLI after configuring webhook>
+```
+
+> How to get **Google** and **Stripe** variables is detailed in:
+>
+> - `docs/google/google-oauth-setup.md`
+> - `docs/stripe/stripe-setup.md`
+
+---
+
+## 4. Start Docker containers
+
+The project already contains a `docker-compose.yml` with:
+
+- `database` – PostgreSQL database
+- `prisma-studio` – Prisma Studio UI
+- `stripe-webhook` – Stripe CLI in "listen" mode for webhooks
+
+To start the infrastructure services:
+
+```bash
+# At the project root
+docker compose up -d
+
+# (If your Docker uses the old command)
+# docker-compose up -d
+```
+
+This will expose:
+
+- PostgreSQL at `localhost:5432`
+
+Verify that containers are running:
+
+```bash
+docker ps
+```
+
+You should see something like:
+
+- `next-starter-database`
+- `next-starter-prisma-studio`
+- `next-starter-stripe-webhook`
+
+### 4.1. Docker Volumes
+
+Data persistence is handled via Docker volumes. By default, the volumes are commented out in `docker-compose.yml` for a clean development experience.
+
+If you want to persist data across container restarts, uncomment the volumes section:
+
+```yaml
+volumes:
+  - ./.docker/postgres:/var/lib/postgresql/data
+```
+
+To reset data:
+
+```bash
+# Stop containers
+docker compose down
+
+# Remove volumes (if enabled)
+rm -rf ./.docker/postgres
+
+# Restart containers
+docker compose up -d
+```
+
+## 5. Configure and run Prisma (migrations + view tables)
+
+The project uses Prisma with PostgreSQL. The database URL is read from
+`DATABASE_URL` in `.env`.
+
+### 5.1. Ensure database is active
+
+Confirm that the `database` container is running:
+
+```bash
+docker ps | grep next-starter-database
+```
+
+If not, run again:
+
+```bash
+docker compose up -d database
+```
+
+### 5.2. Run migrations
+
+With Docker and `.env` configured, apply migrations to the local database:
+
+```bash
+# Using Bun
+bun db:migrate
+
+# (Alternative with npx)
+# npx prisma migrate dev
+```
+
+This will:
+
+- Create tables defined in `prisma/schema.prisma` in the `next-starter`
+  database
+- Update the `prisma/migrations` folder
+
+### 5.3. View tables with Prisma Studio
+
+Open Prisma Studio to view and edit database tables:
+
+```bash
+# Using Bun
+bun db:studio
+
+# (or with npx)
+# npx prisma studio
+```
+
+By default, it will use the URL from `DATABASE_URL` in your `.env` and open at
+`http://localhost:5555`.
+
+---
+
+## 6. Configure Google OAuth
+
+For Google login, you need the variables:
+
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+
+The complete step-by-step is in `docs/google/google-oauth-setup.md`, including:
+
+- Creating the project in **Google Cloud Console**
+- Configuring the OAuth consent screen
+- Creating OAuth 2.0 credentials (Client ID / Secret)
+- Configuring **redirect URIs** for local environment
+
+After obtaining the values, update your `.env`.
+
+---
+
+## 7. Configure Stripe (test mode + webhook)
+
+For Stripe integration, you need in `.env`:
+
+- `STRIPE_SECRET_KEY` (secret **test** key)
+- `STRIPE_WEBHOOK_SECRET` (webhook secret generated by Stripe CLI)
+
+The detailed step-by-step is in `docs/stripe/stripe-setup.md`, including:
+
+- Create/use a Stripe account in **Test** mode
+- Find and copy the `STRIPE_SECRET_KEY`
+- Configure Customer Portal settings for subscription management
+- Run Stripe CLI (local or via Docker) with:
+
+  ```bash
+  stripe listen --forward-to http://host.docker.internal:3000/api/auth/stripe/webhook
+  ```
+
+- Copy the `whsec_...` value to `STRIPE_WEBHOOK_SECRET`
+- Generate test events (`stripe trigger ...`) to validate the flow
+
+---
+
+## 8. Run Tests
+
+The project uses Vitest for unit testing with coverage reporting.
+
+### 8.1. Run Tests Locally
+
+```bash
+# Run tests for web frontend
+bun run test
+
+# Run tests with coverage
+bun test:coverage
+```
+
+### 8.2. Test Files
+
+Test files are located in `__tests__/` directories next to the code they test.
+
+---
+
+## 9. Run the project locally
+
+With everything configured:
+
+1. Docker containers running (`database`, `stripe-webhook`)
+2. `.env` filled with Google/Stripe/DB/BetterAuth
+3. Migrations executed with Prisma
+
+Run the development server:
+
+```bash
+# Recommended
+bun dev
+
+# Bun is required for this project
+```
+
+Then open:
+
+- Application: `http://localhost:3000`
+
+You should be able to:
+
+- Access the dashboard/login
+- Start Google login flow (if configured)
+- Perform actions that trigger Stripe calls (if configured)
+
+---
+
+## 10. References
+
+- **Next.js**: https://nextjs.org/docs
+- **Docker Desktop**: https://docs.docker.com/desktop/
+- **PostgreSQL**: https://www.postgresql.org/docs/
+- **Prisma**: https://www.prisma.io/docs
+- **Stripe Docs**: https://stripe.com/docs
+- **Stripe CLI**: https://stripe.com/docs/stripe-cli
+- **Google Cloud Console**: https://console.cloud.google.com/
+- **Vitest**: https://vitest.dev/
