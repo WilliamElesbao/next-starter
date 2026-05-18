@@ -292,8 +292,8 @@ bun run ci            # CI lint (strict)
 ### Testing
 
 ```bash
-bun run test            # Vitest
-bun run test:coverage   # Vitest with coverage
+bun run test            # Jest
+bun run test:coverage   # Jest with coverage
 ```
 
 ## Prohibited Practices
