@@ -269,22 +269,45 @@ bun run ci                          # CI lint (Biome)
 ### Tests
 
 ```bash
-bun run test                        # Jest
-bun run test:coverage               # Jest with coverage
+bun run test                        # Run Jest tests
+bun run test:coverage               # Run tests with coverage
 ```
 
-### Infrastructure
+### Docker & Deployment
 
 ```bash
-docker compose up -d                # Database, Prisma Studio, Stripe CLI
+# Local infrastructure (Docker Compose)
+docker compose up -d                # Start database, Prisma Studio, Stripe webhook
+docker compose down                 # Stop all services
+
+# Production Docker build
+bun run build                       # Build Next.js standalone output
+docker build -t next-starter .      # Build Docker image
+
+# Run Docker container (change localhost to host.docker.internal)
+docker run --name next-starter \
+  --env-file .env \
+  -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/next-starter \
+  -p 3000:3000 \
+  next-starter
 ```
 
 ## CI/CD
 
 ### Pipeline Checks
 
-- **Lint**: `bun run ci`
-- **Tests**: `bun run test`
-- **Coverage**: `bun run test:coverage`
+- **Install**: `bun install`
+- **Prisma Generate**: `bun run db:generate`
+- **Typecheck**: `bun tsc`
+- **Lint**: `bun biome ci .`
+- **i18n Audit**: `bun locale-check`, `bun locale-unused`
+- **Tests**: `npx jest`
+- **Build**: `node --run build`
 - **SonarCloud**: Code quality and security analysis
+
+### Docker Compose Services
+
+- **database**: PostgreSQL (port 5432)
+- **prisma-studio**: Prisma Studio UI (port 5555)
+- **stripe-webhook**: Stripe CLI webhook forwarder
 

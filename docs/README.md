@@ -74,9 +74,27 @@ bun run locale-unused
 bun run lint
 bun run lint:fix
 bun run format
+bun run ci
 
 # Type checking
-bun run tsc
+bun tsc
+```
+
+## Build Commands
+
+```bash
+# Build Next.js standalone output
+bun run build
+
+# Build Docker image (after running bun run build)
+docker build -t next-starter .
+
+# Run Docker container
+docker run --name next-starter \
+  --env-file .env \
+  -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/next-starter \
+  -p 3000:3000 \
+  next-starter
 ```
 
 ## Database Commands

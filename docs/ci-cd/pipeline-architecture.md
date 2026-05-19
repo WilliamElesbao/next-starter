@@ -28,21 +28,36 @@ The CI/CD pipeline is designed with separation of concerns, ensuring each workfl
 │  (bun install)  │    │   Workflow   │  │   Workflow   │
 └────────┬────────┘    └──────┬───────┘  └──────┬───────┘
          │                    │                  │
-    ┌────┴────┐               │                  │
-    ▼         ▼               ▼                  ▼
-┌────────┐ ┌────┐    ┌────────────┐  ┌──────────────┐
-│Typecheck│ │Lint│    │ SonarCloud │  │    Biome     │
-│ (bun tsc)│ │    │   │  Analysis  │  │ Annotations  │
-└────┬────┘ └─┬──┘    └─────┬──────┘  └──────┬───────┘
-    │        │             │                 │
-    └───┬────┴─────────────┴─────────────────┘
-         ▼
+         ▼                    ▼                  ▼
+┌─────────────────┐    ┌────────────┐  ┌──────────────┐
+│ Prisma Generate │    │ SonarCloud │  │    Biome     │
+│ (db:generate)   │    │  Analysis  │  │ Annotations  │
+└────────┬────────┘    └─────┬──────┘  └──────┬───────┘
+         │                   │                 │
+    ┌────┴────┬──────────────┴─────────────────┘
+    │         │
+    ▼         ▼
+┌────────┐ ┌────┐
+│Typecheck│ │Lint│
+│ (bun tsc)│ │    │
+└────┬────┘ └─┬──┘
+    │        │
+    └───┬────┴───┐
+        │        │
+        ▼        ▼
+    ┌──────┐ ┌────────┐
+    │i18n  │ │ Tests  │
+    │Audit │ │ (jest) │
+    └──┬───┘ └───┬────┘
+       │         │
+       └────┬────┘
+            ▼
     ┌──────────────┐
-    │ i18n + Build │
-    │              │
+    │    Build     │
+    │ (node --run) │
     └─────┬────────┘
-        │
-        ▼
+          │
+          ▼
 ┌──────────────────────┐
 │  GitHub Commit Status │
 │  ✓ CI                 │
@@ -64,15 +79,17 @@ The CI/CD pipeline is designed with separation of concerns, ensuring each workfl
 **Purpose:** Primary CI pipeline for code validation
 
 **Responsibilities:**
-- Install dependencies
+- Install dependencies (`bun install`)
+- Generate Prisma client (`bun run db:generate`)
 - Run TypeScript type checking (`bun tsc`)
 - Execute Biome linting (`bun biome ci .`)
 - Run i18n audits (`bun locale-check`, `bun locale-unused`)
-- Build the Next.js app (`bun run build`)
+- Run Jest tests (`npx jest`)
+- Build the Next.js app (`node --run build`)
 
 **Triggers:** Push events and pull requests to main branch
 
-**Execution Flow:** Sequential (install → typecheck → test → lint)
+**Execution Flow:** Sequential (install → prisma-generate → typecheck → lint → i18n-audit → tests → build)
 
 **Platform:** ARM64 architecture support
 
@@ -107,10 +124,12 @@ The CI/CD pipeline is designed with separation of concerns, ensuring each workfl
 
 | Check | Drone CI | SonarCloud | Biome Lint |
 |-------|----------|------------|------------|
+| Prisma Generate | ✅ | ❌ | ❌ |
 | Type Checking | ✅ | ❌ | ❌ |
 | Linting (CI mode) | ✅ | ❌ | ❌ |
 | Linting (Annotations) | ❌ | ❌ | ✅ |
 | i18n Audit | ✅ | ❌ | ❌ |
+| Unit Tests | ✅ | ❌ | ❌ |
 | Build Validation | ✅ | ❌ | ❌ |
 | Code Quality Analysis | ❌ | ✅ | ❌ |
 | Security Analysis | ❌ | ✅ | ❌ |
@@ -128,7 +147,7 @@ The CI/CD pipeline is designed with separation of concerns, ensuring each workfl
 
 | Workflow | Typical Duration | Blocking |
 |----------|-----------------|----------|
-| Drone CI | 3-5 minutes | Yes |
+| Drone CI | 4-7 minutes | Yes |
 | SonarCloud | 1-3 minutes | Yes |
 | Biome Lint | 30-60 seconds | No (continue-on-error) |
 
@@ -197,12 +216,20 @@ bun tsc
 bun locale-check
 bun locale-unused
 
+# Test Jest locally
+bun run test
+bun run test:coverage
+
 # Test build locally
 bun run build
+
+# Test Prisma generate locally
+bun run db:generate
 
 # Test full CI pipeline locally (requires Docker)
 docker run -v $(pwd):/workspace -w /workspace oven/bun:1.3.3 bun install
 docker run -v $(pwd):/workspace -w /workspace oven/bun:1.3.3 bun biome ci .
+docker run -v $(pwd):/workspace -w /workspace node:22-alpine npx jest
 ```
 
 ## References

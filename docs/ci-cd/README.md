@@ -14,11 +14,13 @@ The pipeline is split across three systems:
 
 ### Drone CI Stages
 
-1. Install dependencies
-2. Type checking (`bun tsc`)
-3. Biome CI lint
-4. i18n audit (`locale-check`, `locale-unused`)
-5. Build (`bun run build`)
+1. Install dependencies (`bun install`)
+2. Prisma generate (`bun run db:generate`)
+3. Type checking (`bun tsc`)
+4. Biome CI lint (`bun biome ci .`)
+5. i18n audit (`bun locale-check`, `bun locale-unused`)
+6. Tests (`npx jest`)
+7. Build (`node --run build`)
 
 ### GitHub Actions
 
@@ -30,7 +32,7 @@ The pipeline is split across three systems:
 - CI is implemented and enforced
 - CD is **not** implemented yet
 - Sonar coverage metric is intentionally disabled in `sonar-project.properties` (`sonar.coverage.exclusions=**/*`)
-- Unit tests are available via `bun run test`, but the Drone test step is currently commented out
+- Unit tests are now enabled and run in the Drone CI pipeline
 
 ## Documentation Map
 

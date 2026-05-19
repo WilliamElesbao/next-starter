@@ -87,32 +87,81 @@ bun dev
 
 ## Core commands
 ```bash
-bun dev
-bun run build
-bun run start
-bun run lint
-bun run lint:fix
-bun run format
-bun run test
-bun run test:coverage
-bun run locale-check
-bun run locale-unused
-bun run db:generate
-bun run db:migrate
-bun run db:studio
+# Development
+bun dev                             # Start Next.js dev server
+bun run start                       # Start production server
+
+# Build
+bun run build                       # Build Next.js standalone output
+
+# Quality & Testing
+bun run lint                        # Biome check
+bun run lint:fix                    # Biome check with auto-fix
+bun run format                      # Biome format
+bun run ci                          # CI lint (strict)
+bun run test                        # Run Jest tests
+bun run test:coverage               # Run tests with coverage
+
+# i18n
+bun run locale-check                # Validate translation files
+bun run locale-unused               # Check unused i18n keys
+
+# Database (Prisma)
+bun run db:generate                 # Generate Prisma client
+bun run db:migrate                  # Apply migrations
+bun run db:studio                   # Open Prisma Studio
+
+# Better Auth
+bun run better-auth:generate        # Generate Better Auth types/config
 ```
 
 ## Docker support
-This repository ships a single `Dockerfile` for the Next.js standalone build.
-Run `bun run build` first, then build the image. See `docs/docker/deployment.md`
-for the full flow.
+
+### Local Development Infrastructure
+
+The project includes a `docker-compose.yml` with three services:
+
+- **database**: PostgreSQL database
+- **prisma-studio**: Prisma Studio UI (port 5555)
+- **stripe-webhook**: Stripe CLI for webhook forwarding
+
+Start all services:
+```bash
+docker compose up -d
+```
+
+### Production Docker Image
+
+The `Dockerfile` builds a production-ready Next.js standalone image.
+
+**Build steps:**
+```bash
+# 1. Install dependencies and build
+bun install
+bun run build
+
+# 2. Build Docker image
+docker build -t next-starter .
+
+# 3. Run container with environment variables
+docker run --name next-starter \
+  --env-file .env \
+  -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/next-starter \
+  -p 3000:3000 \
+  next-starter
+```
+
+**Important:** When running the container, change `DATABASE_URL` from `localhost` to `host.docker.internal` to connect to services on the host machine.
+
+See `docs/docker/deployment.md` for complete deployment documentation.
 
 ## CI/CD overview
-- Drone CI (`.drone.yml`): install → typecheck → lint → i18n audit → build
-- GitHub Actions:
+- **Drone CI** (`.drone.yml`): install → prisma-generate → typecheck → lint → i18n audit → tests → build
+- **GitHub Actions**:
   - `.github/workflows/sonar.yml` (SonarCloud scan)
   - `.github/workflows/pr-review.yml` (Biome annotations)
-- SonarCloud config in `sonar-project.properties`
+- **SonarCloud** config in `sonar-project.properties`
+- **Tests**: Jest with coverage reporting (enabled in CI pipeline)
 
 ## Environment setup
 Environment is centralized in a root `.env` file. Use `.env.example` as the

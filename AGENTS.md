@@ -292,8 +292,40 @@ bun run ci            # CI lint (strict)
 ### Testing
 
 ```bash
-bun run test            # Jest
-bun run test:coverage   # Jest with coverage
+bun run test            # Run Jest tests
+bun run test:coverage   # Run tests with coverage
+```
+
+## Docker and Deployment
+
+### Local Infrastructure (Docker Compose)
+
+```bash
+# Start all services (database, Prisma Studio, Stripe webhook)
+docker compose up -d
+
+# Stop all services
+docker compose down
+
+# View service logs
+docker compose logs -f
+```
+
+### Production Docker Build
+
+```bash
+# 1. Build Next.js standalone output
+bun run build
+
+# 2. Build Docker image
+docker build -t next-starter .
+
+# 3. Run container (remember to change localhost to host.docker.internal)
+docker run --name next-starter \
+  --env-file .env \
+  -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/next-starter \
+  -p 3000:3000 \
+  next-starter
 ```
 
 ## Prohibited Practices
