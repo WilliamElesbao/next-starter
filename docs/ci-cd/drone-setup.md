@@ -9,9 +9,12 @@ instance for the repository pipeline defined in `.drone.yml`.
 
 The pipeline is responsible for:
 
+- Dependency installation
+- Prisma client generation
 - i18n validation
 - Type checking
 - Linting
+- Unit testing
 - Build validation
 
 ## Prerequisites
@@ -229,9 +232,11 @@ Push a commit or open a pull request and verify the following stages execute
 successfully in Drone:
 
 - `install`
+- `prisma-generate`
 - `typecheck`
 - `lint`
 - `i18n-audit`
+- `tests`
 - `build`
 
 Also confirm:

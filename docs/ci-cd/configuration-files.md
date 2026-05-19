@@ -51,18 +51,12 @@ steps:
     commands:
       - bun install --ignore-scripts
 
-  - name: lint
+  - name: prisma-generate
     image: oven/bun:1.3.3
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
     commands:
-      - bun biome ci .
-    depends_on:
-      - typecheck
-
-  - name: i18n-audit
-    image: oven/bun:1.3.3
-    commands:
-      - bun locale-check
-      - bun locale-unused
+      - bun run db:generate
     depends_on:
       - install
 
@@ -72,20 +66,49 @@ steps:
       - bun tsc
     depends_on:
       - install
+      - prisma-generate
 
-  # - name: tests
-  #   image: oven/bun:1.3.3
-  #   commands:
-  #     - bun run test
-  #   depends_on:
-  #     - install
-  #     - typecheck
-  #     - lint
+  - name: lint
+    image: oven/bun:1.3.3
+    commands:
+      - bun biome ci .
+    depends_on:
+      - install
+
+  - name: i18n-audit
+    image: oven/bun:1.3.3
+    commands:
+      - bun locale-check
+      - bun locale-unused
+    depends_on:
+      - install
+
+  - name: tests
+    image: node:22-alpine
+    commands:
+      - npx jest
+    depends_on:
+      - install
+      - prisma-generate
+      - typecheck
 
   - name: build
     image: node:22-alpine
+    environment:
+      NEXT_PUBLIC_BASE_URL: http://localhost:3000
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
+      BETTER_AUTH_SECRET: test-secret
+      BETTER_AUTH_URL: http://localhost:3000
+      GOOGLE_CLIENT_ID: test
+      GOOGLE_CLIENT_SECRET: test
+      RESEND_API_KEY: test
+      EMAIL_FROM: test@test.com
+      EMAIL_TO: test@test.com
+      AUDIENCE_ID: test
+      STRIPE_SECRET_KEY: test
+      STRIPE_WEBHOOK_SECRET: test
     commands:
-      - bun run build
+      - node --run build
     depends_on:
       - install
       - lint
@@ -96,12 +119,14 @@ steps:
 
 **Key Features:**
 
-- Sequential execution: install → typecheck → lint → i18n-audit → build
+- Sequential execution: install → prisma-generate → typecheck → lint → i18n-audit → tests → build
 - Uses Bun 1.3.3 Docker image for most steps
-- Uses Node.js 22 Alpine for web build
+- Uses Node.js 22 Alpine for tests and build
 - Shallow clone (depth: 100) for faster checkout
 - ARM64 platform support
 - i18n validation to ensure translation keys are used correctly
+- Prisma client generation before typecheck and tests
+- Environment variables provided for build step
 
 ## sonar-project.properties
 

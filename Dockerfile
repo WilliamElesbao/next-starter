@@ -1,8 +1,8 @@
 FROM oven/bun:1.3.3
 WORKDIR /app
 
-RUN addgroup --system --gid 1001 bunjs
-RUN adduser --system --uid 1001 bunjs
+RUN addgroup --system --gid 1001 bunjs && \
+    adduser --system --uid 1001 bunjs
 
 USER bunjs
 
