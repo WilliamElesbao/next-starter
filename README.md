@@ -9,12 +9,14 @@ PostgreSQL, Better Auth, Stripe billing, and React Email templates.
 It is designed to keep platform concerns centralized while features live in
 their own modules.
 
-|![sign-in page](docs/sign-in.png)|![dashboard-welcome toast](docs/dashboard-welcome.png)|![dashboard page](docs/dashboard.png)|![email sent](docs/email-sent.png)|![email](docs/email.png)
-|---|---|---|---|---|
+|![sign-in page](docs/sign-in.png)|![dashboard-welcome toast](docs/dashboard-welcome.png)|![dashboard page](docs/dashboard.png)
+|---|---|---|
 
+|![email sent](docs/email-sent.png)|![email](docs/email.png)|![redireting to stripe toast](docs/redirecting-to-stripe.png)
+|---|---|---|
 
-|![redireting to stripe toast](docs/redirecting-to-stripe.png)|![stripe checkout screen](docs/stripe-checkout-screen.png)|![cancel subscription dialog](docs/cancel-subscription-dialog.png)|![stripe subscription cancellation screen](docs/stripe-subscription-cancellation-screen.png)
-|---|---|---|---|
+|![stripe checkout screen](docs/stripe-checkout-screen.png)|![cancel subscription dialog](docs/cancel-subscription-dialog.png)|![stripe subscription cancellation screen](docs/stripe-subscription-cancellation-screen.png)
+|---|---|---|
 
 ## Stack
 - Next.js 16 (App Router) + React 19
