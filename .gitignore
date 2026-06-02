@@ -43,8 +43,5 @@ next-env.d.ts
 # prisma
 /prisma/generated
 
-# react-email
-/emails/node_modules
-
 # next-intl
 /src/lib/i18n/locales/*.d.json.ts
