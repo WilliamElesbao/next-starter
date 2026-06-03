@@ -24,10 +24,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useDialog } from "@/context/dialog.context";
+import { useDialog } from "@/contexts/dialog-context";
 import type { SessionResponse } from "@/lib/better-auth/auth";
 import { authClient } from "@/lib/better-auth/auth-client";
-import { getInitials } from "@/utils";
+import { getInitials } from "@/utils/get-initials";
 
 export function NavUser({ user }: Readonly<{ user: SessionResponse["user"] }>) {
   const { isMobile } = useSidebar();

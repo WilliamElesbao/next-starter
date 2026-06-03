@@ -1,8 +1,8 @@
 "use server";
 
 import type Stripe from "stripe";
-import { stripeClient } from "@/lib/stripe";
-import { formatPrice } from "@/utils";
+import { stripeClient } from "@/lib/stripe/stripe-client";
+import { formatPrice } from "@/utils/format-price";
 
 export interface Plan {
   id: string;

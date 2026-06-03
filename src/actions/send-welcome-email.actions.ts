@@ -1,7 +1,7 @@
 "use server";
 
 import { env } from "@/env";
-import { resend } from "@/lib/resend";
+import { resend } from "@/lib/resend/resend-client";
 import WelcomeEmail from "../../react-email/emails/welcome-email";
 
 /**

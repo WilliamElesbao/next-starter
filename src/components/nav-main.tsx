@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useMailer } from "@/hooks/email/useSendWelcomeEmail";
+import { useMailer } from "@/hooks/email/use-send-welcome-email";
 
 export function NavMain({
   items,

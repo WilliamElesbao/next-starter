@@ -9,9 +9,9 @@ import { ChoosePlanDialog } from "@/components/origin-ui/choose-plan-dialog";
 import { SectionCards } from "@/components/section-cards";
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { DialogProvider } from "@/context/dialog.context";
+import { DialogProvider } from "@/contexts/dialog-context";
 import type { SessionResponse } from "@/lib/better-auth/auth";
-import { useWelcomeToast } from "../auth/hooks/useWelcomeToast";
+import { useWelcomeToast } from "../auth/hooks/use-welcome-toast";
 import data from "./data.json";
 
 interface DashboardWrapperProps {
