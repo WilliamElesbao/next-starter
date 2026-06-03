@@ -292,7 +292,7 @@ bun run ci            # CI lint (strict)
 ### Testing
 
 ```bash
-bun run test            # Run Jest tests
+bun run test            # Run tests
 bun run test:coverage   # Run tests with coverage
 ```
 

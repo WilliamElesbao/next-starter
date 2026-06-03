@@ -2,5 +2,5 @@ import Stripe from "stripe";
 import { env } from "@/env";
 
 export const stripeClient = new Stripe(env.STRIPE_API_KEY, {
-  apiVersion: "2026-04-22.dahlia",
+  apiVersion: "2026-05-27.dahlia",
 });

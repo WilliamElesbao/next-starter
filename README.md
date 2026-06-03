@@ -99,7 +99,7 @@ bun run lint                        # Biome check
 bun run lint:fix                    # Biome check with auto-fix
 bun run format                      # Biome format
 bun run ci                          # CI lint (strict)
-bun run test                        # Run Jest tests
+bun run test                        # Run tests
 bun run test:coverage               # Run tests with coverage
 
 # i18n
@@ -161,7 +161,7 @@ See `docs/docker/deployment.md` for complete deployment documentation.
   - `.github/workflows/sonar.yml` (SonarCloud scan)
   - `.github/workflows/pr-review.yml` (Biome annotations)
 - **SonarCloud** config in `sonar-project.properties`
-- **Tests**: Jest with coverage reporting (enabled in CI pipeline)
+- **Tests**: Tests with coverage reporting (enabled in CI pipeline)
 
 ## Environment setup
 Environment is centralized in a root `.env` file. Use `.env.example` as the

@@ -19,8 +19,8 @@ The pipeline is split across three systems:
 3. Type checking (`bun tsc`)
 4. Biome CI lint (`bun biome ci .`)
 5. i18n audit (`bun locale-check`, `bun locale-unused`)
-6. Tests (`npx jest`)
-7. Build (`node --run build`)
+6. Tests (`bun run test`)
+7. Build (`npm run build`)
 
 ### GitHub Actions
 

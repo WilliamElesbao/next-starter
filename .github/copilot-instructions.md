@@ -269,7 +269,7 @@ bun run ci                          # CI lint (Biome)
 ### Tests
 
 ```bash
-bun run test                        # Run Jest tests
+bun run test                        # Run tests
 bun run test:coverage               # Run tests with coverage
 ```
 
@@ -301,8 +301,8 @@ docker run --name next-starter \
 - **Typecheck**: `bun tsc`
 - **Lint**: `bun biome ci .`
 - **i18n Audit**: `bun locale-check`, `bun locale-unused`
-- **Tests**: `npx jest`
-- **Build**: `node --run build`
+- **Tests**: `bun run test`
+- **Build**: `npm run build`
 - **SonarCloud**: Code quality and security analysis
 
 ### Docker Compose Services

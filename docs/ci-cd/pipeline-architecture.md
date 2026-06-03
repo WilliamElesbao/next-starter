@@ -47,7 +47,7 @@ The CI/CD pipeline is designed with separation of concerns, ensuring each workfl
         ▼        ▼
     ┌──────┐ ┌────────┐
     │i18n  │ │ Tests  │
-    │Audit │ │ (jest) │
+    │Audit │ │        │
     └──┬───┘ └───┬────┘
        │         │
        └────┬────┘
@@ -84,8 +84,8 @@ The CI/CD pipeline is designed with separation of concerns, ensuring each workfl
 - Run TypeScript type checking (`bun tsc`)
 - Execute Biome linting (`bun biome ci .`)
 - Run i18n audits (`bun locale-check`, `bun locale-unused`)
-- Run Jest tests (`npx jest`)
-- Build the Next.js app (`node --run build`)
+- Run tests (`bun run test`)
+- Build the Next.js app (`npm run build`)
 
 **Triggers:** Push events and pull requests to main branch
 
@@ -216,7 +216,7 @@ bun tsc
 bun locale-check
 bun locale-unused
 
-# Test Jest locally
+# Test locally
 bun run test
 bun run test:coverage
 
@@ -229,7 +229,7 @@ bun run db:generate
 # Test full CI pipeline locally (requires Docker)
 docker run -v $(pwd):/workspace -w /workspace oven/bun:1.3.3 bun install
 docker run -v $(pwd):/workspace -w /workspace oven/bun:1.3.3 bun biome ci .
-docker run -v $(pwd):/workspace -w /workspace node:22-alpine npx jest
+docker run -v $(pwd):/workspace -w /workspace oven/bun:1.3.3 bun run test
 ```
 
 ## References
