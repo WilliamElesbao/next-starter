@@ -22,7 +22,7 @@ export async function sendWelcomeEmailAction() {
   if (error) {
     return {
       success: false,
-      message: error ?? "Unknown error",
+      message: error.message,
     };
   }
 
