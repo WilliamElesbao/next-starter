@@ -104,9 +104,8 @@ steps:
       RESEND_API_KEY: re_test
       EMAIL_FROM: test@test.com
       EMAIL_TO: test@test.com
-      AUDIENCE_ID: test
-      STRIPE_API_KEY: test
-      STRIPE_WEBHOOK_SECRET: test
+      STRIPE_API_KEY: sk_test
+      STRIPE_WEBHOOK_SECRET: whsec_test
     commands:
       - npm run build
     depends_on:
