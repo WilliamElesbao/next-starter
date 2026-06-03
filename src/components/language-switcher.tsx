@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useLocaleLabel } from "@/hooks/locale/useLocale";
+import { useLocaleLabel } from "@/hooks/locale/use-locale";
 import { useRouter } from "@/lib/i18n/navigation";
 import { routing } from "@/lib/i18n/routing";
 

@@ -16,7 +16,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { data } from "@/constants";
+import { data } from "@/constants/sidebar/sidebar-options";
 import type { SessionResponse } from "@/lib/better-auth/auth";
 
 export function AppSidebar({
