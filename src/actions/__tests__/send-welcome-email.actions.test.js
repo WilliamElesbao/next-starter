@@ -16,7 +16,7 @@ jest.mock("@/env", () => ({
   },
 }));
 
-jest.mock("@/lib/resend", () => ({
+jest.mock("@/lib/resend/resend-client", () => ({
   resend: {
     emails: {
       send: mockSend,

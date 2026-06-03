@@ -1,10 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { AuthForm } from "@/feature/auth/components";
-import { useSignInForm } from "@/feature/auth/sign-in/hooks/useSignInForm";
 import { cn } from "@/lib/shadcn/utils";
+import { AuthForm } from "../components/auth-form";
 import { signInWithGoogle } from "../hooks/sign-in";
+import { useSignInForm } from "./hooks/use-sign-in-form";
 
 export function SignInForm({
   className,

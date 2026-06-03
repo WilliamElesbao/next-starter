@@ -1,8 +1,8 @@
 "use server";
 
 import { env } from "@/env";
-import { resend } from "@/lib/resend";
-import WelcomeEmail from "../../emails/src/templates/welcomeEmail";
+import { resend } from "@/lib/resend/resend-client";
+import WelcomeEmail from "../../react-email/emails/welcome-email";
 
 /**
  * Sends a welcome email to a new user using the Resend email service.

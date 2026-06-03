@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
-import { useUpgradeSubscription } from "./useSubscription";
+import { useUpgradeSubscription } from "./use-subscription";
 
 const formSchema = z.object({
   priceId: z.string(),

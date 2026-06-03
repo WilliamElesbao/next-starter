@@ -2,10 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useCallback } from "react";
 import { toast } from "sonner";
-import { useDialog } from "@/context/dialog.context";
+import { useDialog } from "@/contexts/dialog-context";
 import { env } from "@/env";
 import { authClient } from "@/lib/better-auth/auth-client";
-import type { SubscriptionFormValues } from "./useSubscriptionForm";
+import type { SubscriptionFormValues } from "./use-subscription-form";
 
 /**
  * Custom hook to handle subscription upgrade logic, including API interaction and user feedback.

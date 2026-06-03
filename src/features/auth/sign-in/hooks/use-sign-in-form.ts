@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { WELCOME_TOAST } from "@/constants/session-storage";
 import { env } from "@/env";
 import { authClient } from "@/lib/better-auth/auth-client";
-import { type SignInFormValues, signInFormSchema } from "./form.schema";
+import { type SignInFormValues, useSignInFormSchema } from "./form-schema";
 
 /**
  * Manages sign-in form state and submission with email/password authentication.
@@ -16,7 +16,7 @@ export const useSignInForm = () => {
   const t = useTranslations("sign-in");
 
   const form = useForm<SignInFormValues>({
-    resolver: zodResolver(signInFormSchema()),
+    resolver: zodResolver(useSignInFormSchema()),
     defaultValues: {
       email: "",
       password: "",
