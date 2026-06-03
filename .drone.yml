@@ -70,7 +70,7 @@ steps:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       BETTER_AUTH_SECRET: test-secret
       BETTER_AUTH_URL: http://localhost:3000
-      GOOGLE_CLIENT_ID: test
+      GOOGLE_CLIENT_ID: test.apps.googleusercontent.com
       GOOGLE_CLIENT_SECRET: test
       RESEND_API_KEY: re_test
       EMAIL_FROM: test@test.com
