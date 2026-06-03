@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { WELCOME_TOAST } from "@/constants/session-storage";
+import { env } from "@/env";
 import { authClient } from "@/lib/better-auth/auth-client";
 
 /**
@@ -14,7 +15,7 @@ export const signInWithGoogle = async () => {
     await authClient.signIn.social(
       {
         provider: "google",
-        callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}`,
+        callbackURL: env.NEXT_PUBLIC_BASE_URL,
       },
       {
         onError: (context) => {

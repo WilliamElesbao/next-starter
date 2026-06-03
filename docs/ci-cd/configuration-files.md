@@ -99,14 +99,13 @@ steps:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
       BETTER_AUTH_SECRET: test-secret
       BETTER_AUTH_URL: http://localhost:3000
-      GOOGLE_CLIENT_ID: test
+      GOOGLE_CLIENT_ID: test.apps.googleusercontent.com
       GOOGLE_CLIENT_SECRET: test
-      RESEND_API_KEY: test
+      RESEND_API_KEY: re_test
       EMAIL_FROM: test@test.com
       EMAIL_TO: test@test.com
-      AUDIENCE_ID: test
-      STRIPE_SECRET_KEY: test
-      STRIPE_WEBHOOK_SECRET: test
+      STRIPE_API_KEY: sk_test
+      STRIPE_WEBHOOK_SECRET: whsec_test
     commands:
       - node --run build
     depends_on:

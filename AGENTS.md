@@ -346,20 +346,31 @@ docker run --name next-starter \
 All environment variables are validated in `src/env.ts` using Zod:
 
 ```typescript
-const envSchema = z.object({
-  NEXT_PUBLIC_BASE_URL: z.url(),
-  DATABASE_URL: z.url().startsWith("postgresql://"),
-  BETTER_AUTH_SECRET: z.string().min(1),
-  BETTER_AUTH_URL: z.url(),
-  GOOGLE_CLIENT_ID: z.string().min(1),
-  GOOGLE_CLIENT_SECRET: z.string().min(1),
-  RESEND_API_KEY: z.string().min(1),
-  EMAIL_FROM: z.email(),
-  EMAIL_TO: z.email(),
-  AUDIENCE_ID: z.string().min(1),
-  STRIPE_SECRET_KEY: z.string().min(1),
-  STRIPE_WEBHOOK_SECRET: z.string().min(1),
-})
+export const env = createEnv({
+  server: {
+    // Database
+    DATABASE_URL: z.url().startsWith("postgresql://"),
+    // BetterAuth
+    BETTER_AUTH_SECRET: z.string().min(1),
+    BETTER_AUTH_URL: z.url(),
+    // Google
+    GOOGLE_CLIENT_ID: z.string().endsWith(".apps.googleusercontent.com"),
+    GOOGLE_CLIENT_SECRET: z.string().min(1),
+    // Resend
+    RESEND_API_KEY: z.string().startsWith("re_"),
+    EMAIL_FROM: z.email(),
+    EMAIL_TO: z.email(),
+    // Stripe
+    STRIPE_API_KEY: z.string().startsWith("sk_"),
+    STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_"),
+  },
+  client: {
+    NEXT_PUBLIC_BASE_URL: z.url(),
+  },
+  experimental__runtimeEnv: {
+    NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+  },
+});
 ```
 
 ## Feature Module Structure

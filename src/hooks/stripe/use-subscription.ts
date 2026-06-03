@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { useCallback } from "react";
 import { toast } from "sonner";
 import { useDialog } from "@/contexts/dialog-context";
+import { env } from "@/env";
 import { authClient } from "@/lib/better-auth/auth-client";
 import type { SubscriptionFormValues } from "./use-subscription-form";
 
@@ -24,8 +25,8 @@ export const useUpgradeSubscription = () => {
     }) => {
       const result = await authClient.subscription.upgrade({
         plan: formValues.planName,
-        successUrl: process.env.NEXT_PUBLIC_BASE_URL,
-        cancelUrl: process.env.NEXT_PUBLIC_BASE_URL,
+        successUrl: env.NEXT_PUBLIC_BASE_URL,
+        cancelUrl: env.NEXT_PUBLIC_BASE_URL,
         disableRedirect: false,
       });
 
@@ -97,7 +98,7 @@ export const useCancelSubscription = () => {
   const mutation = useMutation({
     mutationFn: async () => {
       const result = await authClient.subscription.cancel({
-        returnUrl: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
+        returnUrl: env.NEXT_PUBLIC_BASE_URL,
       });
       return result;
     },
