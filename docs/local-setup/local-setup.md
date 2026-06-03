@@ -245,7 +245,7 @@ The detailed step-by-step is in `docs/stripe/stripe-setup.md`, including:
 
 ## 8. Run Tests
 
-The project uses Jest for unit testing with coverage reporting.
+The project uses Vitest for unit testing with coverage reporting.
 
 ### 8.1. Run Tests Locally
 
@@ -301,4 +301,4 @@ You should be able to:
 - **Stripe Docs**: https://stripe.com/docs
 - **Stripe CLI**: https://stripe.com/docs/stripe-cli
 - **Google Cloud Console**: https://console.cloud.google.com/
-- **Jest**: https://jestjs.io/
+- **Vitest**: https://vitest.dev/

@@ -84,16 +84,16 @@ steps:
       - install
 
   - name: tests
-    image: node:22-alpine
+    image: oven/bun:1.3.3
     commands:
-      - npx jest
+      - bun run test
     depends_on:
       - install
       - prisma-generate
       - typecheck
 
   - name: build
-    image: node:22-alpine
+    image: node:24
     environment:
       NEXT_PUBLIC_BASE_URL: http://localhost:3000
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/postgres
@@ -104,10 +104,11 @@ steps:
       RESEND_API_KEY: re_test
       EMAIL_FROM: test@test.com
       EMAIL_TO: test@test.com
-      STRIPE_API_KEY: sk_test
-      STRIPE_WEBHOOK_SECRET: whsec_test
+      AUDIENCE_ID: test
+      STRIPE_API_KEY: test
+      STRIPE_WEBHOOK_SECRET: test
     commands:
-      - node --run build
+      - npm run build
     depends_on:
       - install
       - lint
