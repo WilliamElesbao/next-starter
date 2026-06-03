@@ -2,7 +2,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { WELCOME_TOAST } from "@/constants";
+import { WELCOME_TOAST } from "@/constants/session-storage";
+import { env } from "@/env";
 import { authClient } from "@/lib/better-auth/auth-client";
 import { type SignInFormValues, signInFormSchema } from "./form.schema";
 
@@ -29,7 +30,7 @@ export const useSignInForm = () => {
     await authClient.signIn.email(
       {
         ...values,
-        callbackURL: `${process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"}`,
+        callbackURL: env.NEXT_PUBLIC_BASE_URL,
       },
       {
         onError: (context) => {

@@ -104,8 +104,7 @@ steps:
       RESEND_API_KEY: test
       EMAIL_FROM: test@test.com
       EMAIL_TO: test@test.com
-      AUDIENCE_ID: test
-      STRIPE_SECRET_KEY: test
+      STRIPE_API_KEY: test
       STRIPE_WEBHOOK_SECRET: test
     commands:
       - node --run build

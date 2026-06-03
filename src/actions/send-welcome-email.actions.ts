@@ -15,7 +15,7 @@ export async function sendWelcomeEmailAction() {
     subject: "Welcome to Next Starter!",
     react: WelcomeEmail({
       name: "D3v",
-      actionUrl: env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
+      actionUrl: env.NEXT_PUBLIC_BASE_URL,
     }),
   });
 

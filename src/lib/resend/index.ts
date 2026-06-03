@@ -8,9 +8,10 @@
  */
 
 import { Resend } from "resend";
+import { env } from "@/env";
 
 // Validate that the API key is configured
-if (!process.env.RESEND_API_KEY) {
+if (!env.RESEND_API_KEY) {
   throw new Error(
     "Missing RESEND_API_KEY environment variable. " +
       "Get your API key from https://resend.com/api-keys",
@@ -32,4 +33,4 @@ if (!process.env.RESEND_API_KEY) {
  * });
  * ```
  */
-export const resend = new Resend(process.env.RESEND_API_KEY);
+export const resend = new Resend(env.RESEND_API_KEY);
