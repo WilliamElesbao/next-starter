@@ -3,7 +3,7 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    // Database and Redis
+    // Database
     DATABASE_URL: z.url().startsWith("postgresql://"),
     // BetterAuth
     BETTER_AUTH_SECRET: z.string().min(1),
