@@ -13,15 +13,15 @@ datasource db {
 }
 
 model User {
-  id                   String    @id
-  name                 String
-  email                String
-  emailVerified        Boolean   @default(false)
-  image                String?
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
-  sessions             Session[]
-  accounts             Account[]
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
 
   stripeCustomerId String?
 
@@ -97,4 +97,39 @@ model Subscription {
   stripeScheduleId     String?
 
   @@map("subscription")
+}
+
+enum DocumentStatus {
+  DONE
+  IN_PROCESS
+}
+
+enum DocumentType {
+  COVER_PAGE
+  TABLE_OF_CONTENTS
+  NARRATIVE
+  TECHNICAL_CONTENT
+  PLAIN_LANGUAGE
+  LEGAL
+  VISUAL
+  FINANCIAL
+  RESEARCH
+  PLANNING
+}
+
+model DocumentSection {
+  id     String         @id
+  header String
+  type   DocumentType
+  status DocumentStatus
+
+  target Int
+  limit  Int
+
+  reviewer String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("document_sections")
 }
