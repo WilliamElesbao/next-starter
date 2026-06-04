@@ -1,7 +1,9 @@
 ---
 paths:
   - "**/*.test.ts"
-  - "**/*.test.tsx"
+  - "**/*.test.tsx"  
+  - "src/components/**/*.tsx"
+  - "src/features/*/components/**/*.tsx"
 ---
 
 # Testing
@@ -23,7 +25,6 @@ paths:
 | Custom hooks | State changes, side effects, edge cases |
 | Server Actions | Happy path + error cases |
 | Utility functions | All branches |
-| Zod schemas | Valid and invalid inputs |
 
 ## TDD Workflow
 

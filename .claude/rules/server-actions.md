@@ -1,16 +1,23 @@
-# Rule: Server Actions
+---
+paths:
+  - "src/actions/**/*.ts"
+  - "src/components/**/*.tsx"
+  - "src/features/*/components/**/*.tsx"
+---
+
+# Server Actions
 
 ## File Structure
 
 ```
 src/actions/                       
-├── plans.actions.ts
-├── send-welcome-email.actions.test.ts  # Unit tests
-├── send-welcome-email.actions.ts
-└── subscription.actions.ts
+├── plans.action.ts
+├── send-welcome-email.action.test.ts  # Unit tests
+├── send-welcome-email.action.ts
+└── subscription.action.ts
 ```
 
-**Naming:** `{domain}.actions.ts` — one domain per file.
+**Naming:** `{domain}.action.ts` — one domain per file.
 
 ## Anatomy of a Server Action
 

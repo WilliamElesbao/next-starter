@@ -1,6 +1,8 @@
 ---
 paths:
-  - "src/**/*.tsx"
+  - "src/**/*.{ts,tsx}"
+  - "src/components/**/*.tsx"
+  - "src/features/*/components/**/*.tsx"
 ---
 
 # Loading States

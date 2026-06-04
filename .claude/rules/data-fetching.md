@@ -1,7 +1,9 @@
 ---
 paths:
-  - "src/**/*.ts"
   - "src/**/*.tsx"
+  - "src/actions/**/*.ts"
+  - "src/app/**/*.tsx"
+  - "src/hooks/**/*.ts"
 ---
 
 # Data Fetching
@@ -12,7 +14,7 @@ paths:
 |---|---|---|
 | Server Component async | Server → Client (props) | Initial data, read-only, SEO |
 | Server Actions | Client → Server (mutation) | Forms, mutations, external services |
-| TanStack Query (useQuery) | Client → API | Client-side read data, polling, caching |
+| TanStack Query (useQuery/useInfiniteQuery) | Client → API | Client-side read data, polling, caching |
 | TanStack Query (useMutation) | Client → Server | Wrapping Server Actions with cache invalidation |
 
 ## Server Component Data Fetching
@@ -71,7 +73,7 @@ export async function cancelSubscription(input: z.infer<typeof CancelSchema>) {
 ```
 src/hooks/{domain}/
 ├── use-subscription.ts          # Shared hook
-├── subscription.queries.ts      # TanStack Query useQuery wrappers
+├── subscription.queries.ts      # TanStack Query useQuery/useInfiniteQuery wrappers
 └── subscription.mutations.ts    # TanStack Query useMutation wrappers
 ```
 
@@ -108,9 +110,9 @@ export function useSubscription(userId: string) {
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "sonner"
 import { cancelSubscription } from "@/actions/subscription.actions"
+import { queryClient } from "@/lib/react-query/query-client";
 
 export function useCancelSubscription() {
-  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: cancelSubscription,

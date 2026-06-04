@@ -135,7 +135,7 @@ async function safePromise<T>(
 | Components | PascalCase | `UserCard` |
 | Hooks | camelCase, prefixed `use` | `useSignInForm` |
 | Functions | camelCase | `formatPrice` |
-| Event handlers | `handle` prefix | `handleSubmit` |
+| Event handlers | `on` prefix | `onSubmit` |
 | Booleans | `is`, `has`, `can` prefix | `isLoading`, `hasError` |
 | Constants (objects) | UPPER_SNAKE_CASE | `WELCOME_TOAST` |
 | Constants (primitives) | camelCase | `maxRetries` |

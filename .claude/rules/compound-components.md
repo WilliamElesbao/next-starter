@@ -1,7 +1,8 @@
 ---
 paths:
   - "src/components/**/*.tsx"
-  - "src/features/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
+  - "src/features/*/components/**/*.tsx"
 ---
 
 # Compound Components
@@ -84,7 +85,7 @@ function SignInForm(props: React.ComponentProps<"div">) {
 Each sub-component follows the primitive component rules (see `primitive-components.md`):
 
 ```tsx
-function AuthFormHeader({ className, ...props }: React.ComponentProps<"div">) {
+export function AuthFormHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="auth-form-header"
@@ -93,6 +94,21 @@ function AuthFormHeader({ className, ...props }: React.ComponentProps<"div">) {
     />
   )
 }
+```
+
+Any component that receives children must use or extend React’s PropsWithChildren type.
+
+```tsx
+import type { PropsWithChildren } from "react";
+
+export const Wrapper = ({ children }: PropsWithChildren) => {
+  return (
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
+      <div className="w-full max-w-sm">{children}</div>
+    </div>
+  );
+};
+
 ```
 
 ## Checklist

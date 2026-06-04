@@ -1,4 +1,10 @@
-# Skill: Addressing PR Comments
+---
+name: address-pr-comments
+description: Process PR comments systematically—read all, categorize, fix blocking items, batch changes, reply to threads, and re-review
+disable-model-invocation: true
+---
+
+# Addressing PR Comments
 
 ## Process
 

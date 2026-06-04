@@ -13,28 +13,25 @@ src/
 ├── app/                # Next.js App Router
 │   ├── [locale]/       # i18n-aware routes
 │   └── api/            # API routes (Better Auth, webhooks)
-├── components/         # UI components
+├── components/         # shared components used across the entire application
 │   ├── ui/             # shadcn/ui primitives (Radix UI based)
-│   └── origin-ui/      # App-specific composition components
-├── constants/          # Shared constants
-├── contexts/           # React contexts
-├── database/           # Prisma connection helper
-├── env.ts              # Environment validation (single source of truth)
-├── features/           # Feature modules (isolated, self-contained)
+│   └── header/         # shared custom component
+├── constants/          # shared constants
+├── contexts/           # shared contexts
+├── database/           # prisma connection helper
+├── features/           # feature modules (isolated, self-contained)
 │   ├── auth/
 │   └── dashboard/
-├── hooks/              # Cross-feature shared hooks
-├── lib/                # Third-party integrations
-│   ├── better-auth/
-│   ├── i18n/
-│   ├── react-query/
-│   ├── resend/
-│   └── stripe/
-├── middleware/         # Middleware modules (auth, i18n, cookies)
-├── providers/          # React providers (Theme, QueryClient, Toaster)
-├── scripts/            # Maintenance scripts
-├── styles/             # Global styles (CSS variables, Tailwind)
-└── utils/              # Pure utility functions
+├── hooks/              # shared hooks used across the entire application
+├── lib/                # reusable libraries preconfigured for the application
+├── middleware/         # middleware modules (auth, i18n, cookies)
+├── providers/          # react providers (Theme, QueryClient, Toaster)
+├── scripts/            # maintenance scripts
+├── styles/             # global styles (CSS variables, Tailwind)
+├── utils/              # pure utility functions
+├── dev/                # devtools
+├── stores/             # global state stores (jotai, zustand, etc.)
+└── env.ts              # environment validation (single source of truth)
 ```
 
 ## Platform vs Feature

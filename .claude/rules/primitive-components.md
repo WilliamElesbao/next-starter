@@ -1,6 +1,8 @@
 ---
 paths:
+  - "src/components/**/*.tsx"
   - "src/components/ui/**/*.tsx"
+  - "src/features/*/components/**/*.tsx"
 ---
 
 # Primitive Components
@@ -10,66 +12,57 @@ Base UI primitives in `src/components/ui/`. These are simple, reusable, stateles
 ## Structure Template
 
 ```tsx
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"
-import { cn } from "@/lib/shadcn/utils"
+import { tv, type VariantProps } from 'tailwind-variants'
+import { twMerge } from 'tailwind-merge'
+import type { ComponentProps } from 'react'
 
-const buttonVariants = cva(
-  "base-classes focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-muted hover:text-foreground",
-        destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
-      },
-      size: {
-        default: "h-8 gap-1.5 px-2.5",
-        sm: "h-7 gap-1 px-2.5 text-[0.8rem]",
-        lg: "h-9 gap-1.5 px-2.5",
-        icon: "size-8",
-      },
-    },
-    defaultVariants: { variant: "default", size: "default" },
-  }
-)
+export const buttonVariants = tv({
+	base: [
+		'inline-flex cursor-pointer items-center justify-center font-medium rounded-lg border transition-colors',
+		'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+		'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
+	],
+	variants: {
+		variant: {
+			primary: 'border-primary bg-primary text-primary-foreground hover:bg-primary-hover',
+			secondary: 'border-border bg-secondary text-secondary-foreground hover:bg-muted',
+			ghost: 'border-transparent bg-transparent text-muted-foreground hover:text-foreground',
+			destructive: 'border-destructive bg-destructive text-destructive-foreground hover:bg-destructive/90',
+		},
+		size: {
+			sm: 'h-6 px-2 gap-1.5 text-xs [&_svg]:size-3',
+			md: 'h-7 px-3 gap-2 text-sm [&_svg]:size-3.5',
+			lg: 'h-9 px-4 gap-2.5 text-base [&_svg]:size-4',
+		},
+	},
+	defaultVariants: { variant: 'primary', size: 'md' },
+})
 
-interface ButtonProps
-  extends React.ComponentProps<"button">,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean
+export interface ButtonProps
+	extends ComponentProps<'button'>,
+		VariantProps<typeof buttonVariants> {}
+
+export function Button({ className, variant, size, disabled, children, ...props }: ButtonProps) {
+	return (
+		<button
+			type="button"
+			data-slot="button"
+			data-disabled={disabled ? '' : undefined}
+			className={twMerge(buttonVariants({ variant, size }), className)}
+			disabled={disabled}
+			{...props}
+		>
+			{children}
+		</button>
+	)
 }
-
-function Button({
-  className,
-  variant,
-  size,
-  asChild = false,
-  ...props
-}: ButtonProps) {
-  const Comp = asChild ? Slot.Root : "button"
-  return (
-    <Comp
-      data-slot="button"
-      data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
-}
-
-export { Button, buttonVariants }
 ```
-
 ## Rules
 
 | Rule | Enforcement |
 |---|---|
 | Variants with `cva()` | Required |
-| Classes with `cn()` | Required |
+| Classes with `twMerge()` | Required |
 | `data-slot` attribute | Required — identifies component |
 | States via `data-[state]:` | Required — never conditional className |
 | `focus-visible` ring on interactive elements | Required |
@@ -78,6 +71,8 @@ export { Button, buttonVariants }
 | `asChild` prop for polymorphic rendering | When applicable (via `Slot.Root`) |
 | No `React.FC` | Forbidden |
 | No hardcoded colors | Forbidden — use theme variables |
+| forwardRef | Forbidden |
+| ref prop (React 19) | Required |
 
 ## Radix UI Primitives
 
@@ -88,16 +83,40 @@ import * as Select from "@radix-ui/react-select"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 
 // Dialog
-<Dialog.Root><Dialog.Portal><Dialog.Overlay /><Dialog.Content /></Dialog.Portal></Dialog.Root>
+<Dialog.Root>
+  <Dialog.Portal>
+    <Dialog.Overlay />
+    <Dialog.Content />
+  </Dialog.Portal>
+</Dialog.Root>
 
 // Tabs
-<Tabs.Root><Tabs.List><Tabs.Trigger /></Tabs.List><Tabs.Content /></Tabs.Root>
+<Tabs.Root>
+  <Tabs.List>
+    <Tabs.Trigger />
+  </Tabs.List>
+  <Tabs.Content />
+</Tabs.Root>
 
 // Select
-<Select.Root><Select.Trigger /><Select.Portal><Select.Content><Select.Item /></Select.Content></Select.Portal></Select.Root>
+<Select.Root>
+  <Select.Trigger />
+  <Select.Portal>
+    <Select.Content>
+      <Select.Item />
+    </Select.Content>
+  </Select.Portal>
+</Select.Root>
 
 // Dropdown Menu
-<DropdownMenu.Root><DropdownMenu.Trigger /><DropdownMenu.Portal><DropdownMenu.Content><DropdownMenu.Item /></DropdownMenu.Content></DropdownMenu.Portal></DropdownMenu.Root>
+<DropdownMenu.Root>
+  <DropdownMenu.Trigger />
+  <DropdownMenu.Portal>
+    <DropdownMenu.Content>
+      <DropdownMenu.Item />
+    </DropdownMenu.Content>
+  </DropdownMenu.Portal>
+</DropdownMenu.Root>
 ```
 
 ## Icon Guidelines

@@ -1,6 +1,7 @@
 ---
 paths:
   - "src/components/**/*.tsx"
+  - "src/components/ui/**/*.tsx"
   - "src/features/*/components/**/*.tsx"
 ---
 

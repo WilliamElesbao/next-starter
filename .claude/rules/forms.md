@@ -1,7 +1,9 @@
 ---
 paths:
-  - "src/**/*.tsx"
-  - "src/**/*.ts"
+  - "src/features/**/*form*.ts"
+  - "src/features/**/*form*.tsx"
+  - "src/features/**/*schema*.ts"
+  - "src/features/**/hooks/use-*form*.ts"
 ---
 
 # Forms

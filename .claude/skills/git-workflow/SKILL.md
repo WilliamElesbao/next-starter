@@ -1,4 +1,9 @@
-# Skill: Git Workflow
+---
+name: git-workflow
+description: Branch naming, commit messages, and PR process for this project
+---
+
+# Git Workflow
 
 ## Branch Naming
 

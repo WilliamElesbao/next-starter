@@ -1,4 +1,10 @@
-# Skill: Security Review
+---
+name: security-review
+description: Security checklist for code review—validates auth, input validation, secrets, database safety, Stripe integration, XSS prevention, and dependencies
+disable-model-invocation: true
+---
+
+# Security Review
 
 ## Checklist
 
