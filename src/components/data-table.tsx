@@ -102,7 +102,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/lib/shadcn/use-mobile";
 
 export const schema = z.object({
-  id: z.number(),
+  id: z.string(),
   header: z.string(),
   type: z.string(),
   status: z.string(),
@@ -111,8 +111,10 @@ export const schema = z.object({
   reviewer: z.string(),
 });
 
+export type DataTableItem = z.infer<typeof schema>;
+
 // Create a separate component for the drag handle
-function DragHandle({ id }: { id: number }) {
+function DragHandle({ id }: { id: string }) {
   const { attributes, listeners } = useSortable({
     id,
   });
@@ -131,7 +133,7 @@ function DragHandle({ id }: { id: number }) {
   );
 }
 
-const columns: ColumnDef<z.infer<typeof schema>>[] = [
+const columns: ColumnDef<DataTableItem>[] = [
   {
     id: "drag",
     header: () => null,
@@ -306,7 +308,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
 ];
 
-function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
+function DraggableRow({ row }: { row: Row<DataTableItem> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
     id: row.original.id,
   });
@@ -331,11 +333,7 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
   );
 }
 
-export function DataTable({
-  data: initialData,
-}: {
-  data: z.infer<typeof schema>[];
-}) {
+export function DataTable({ data: initialData }: { data: DataTableItem[] }) {
   const [data, setData] = React.useState(() => initialData);
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -642,7 +640,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
+function TableCellViewer({ item }: { item: DataTableItem }) {
   const isMobile = useIsMobile();
 
   return (
