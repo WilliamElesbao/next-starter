@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": "1",
     "header": "Cover page",
     "type": "Cover page",
     "status": "In Process",
@@ -9,7 +9,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 2,
+    "id": "2",
     "header": "Table of contents",
     "type": "Table of contents",
     "status": "Done",
@@ -18,7 +18,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 3,
+    "id": "3",
     "header": "Executive summary",
     "type": "Narrative",
     "status": "Done",
@@ -27,7 +27,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 4,
+    "id": "4",
     "header": "Technical approach",
     "type": "Narrative",
     "status": "Done",
@@ -36,7 +36,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 5,
+    "id": "5",
     "header": "Design",
     "type": "Narrative",
     "status": "In Process",
@@ -45,7 +45,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 6,
+    "id": "6",
     "header": "Capabilities",
     "type": "Narrative",
     "status": "In Process",
@@ -54,7 +54,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 7,
+    "id": "7",
     "header": "Integration with existing systems",
     "type": "Narrative",
     "status": "In Process",
@@ -63,7 +63,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 8,
+    "id": "8",
     "header": "Innovation and Advantages",
     "type": "Narrative",
     "status": "Done",
@@ -72,7 +72,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 9,
+    "id": "9",
     "header": "Overview of EMR's Innovative Solutions",
     "type": "Technical content",
     "status": "Done",
@@ -81,7 +81,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 10,
+    "id": "10",
     "header": "Advanced Algorithms and Machine Learning",
     "type": "Narrative",
     "status": "Done",
@@ -90,7 +90,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 11,
+    "id": "11",
     "header": "Adaptive Communication Protocols",
     "type": "Narrative",
     "status": "Done",
@@ -99,7 +99,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 12,
+    "id": "12",
     "header": "Advantages Over Current Technologies",
     "type": "Narrative",
     "status": "Done",
@@ -108,7 +108,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 13,
+    "id": "13",
     "header": "Past Performance",
     "type": "Narrative",
     "status": "Done",
@@ -117,7 +117,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 14,
+    "id": "14",
     "header": "Customer Feedback and Satisfaction Levels",
     "type": "Narrative",
     "status": "Done",
@@ -126,7 +126,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 15,
+    "id": "15",
     "header": "Implementation Challenges and Solutions",
     "type": "Narrative",
     "status": "Done",
@@ -135,7 +135,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 16,
+    "id": "16",
     "header": "Security Measures and Data Protection Policies",
     "type": "Narrative",
     "status": "In Process",
@@ -144,7 +144,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 17,
+    "id": "17",
     "header": "Scalability and Future Proofing",
     "type": "Narrative",
     "status": "Done",
@@ -153,7 +153,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 18,
+    "id": "18",
     "header": "Cost-Benefit Analysis",
     "type": "Plain language",
     "status": "Done",
@@ -162,7 +162,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 19,
+    "id": "19",
     "header": "User Training and Onboarding Experience",
     "type": "Narrative",
     "status": "Done",
@@ -171,7 +171,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 20,
+    "id": "20",
     "header": "Future Development Roadmap",
     "type": "Narrative",
     "status": "Done",
@@ -180,7 +180,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 21,
+    "id": "21",
     "header": "System Architecture Overview",
     "type": "Technical content",
     "status": "In Process",
@@ -189,7 +189,7 @@
     "reviewer": "Maya Johnson"
   },
   {
-    "id": 22,
+    "id": "22",
     "header": "Risk Management Plan",
     "type": "Narrative",
     "status": "Done",
@@ -198,7 +198,7 @@
     "reviewer": "Carlos Rodriguez"
   },
   {
-    "id": 23,
+    "id": "23",
     "header": "Compliance Documentation",
     "type": "Legal",
     "status": "In Process",
@@ -207,7 +207,7 @@
     "reviewer": "Sarah Chen"
   },
   {
-    "id": 24,
+    "id": "24",
     "header": "API Documentation",
     "type": "Technical content",
     "status": "Done",
@@ -216,7 +216,7 @@
     "reviewer": "Raj Patel"
   },
   {
-    "id": 25,
+    "id": "25",
     "header": "User Interface Mockups",
     "type": "Visual",
     "status": "In Process",
@@ -225,7 +225,7 @@
     "reviewer": "Leila Ahmadi"
   },
   {
-    "id": 26,
+    "id": "26",
     "header": "Database Schema",
     "type": "Technical content",
     "status": "Done",
@@ -234,7 +234,7 @@
     "reviewer": "Thomas Wilson"
   },
   {
-    "id": 27,
+    "id": "27",
     "header": "Testing Methodology",
     "type": "Technical content",
     "status": "In Process",
@@ -243,7 +243,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 28,
+    "id": "28",
     "header": "Deployment Strategy",
     "type": "Narrative",
     "status": "Done",
@@ -252,7 +252,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 29,
+    "id": "29",
     "header": "Budget Breakdown",
     "type": "Financial",
     "status": "In Process",
@@ -261,7 +261,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 30,
+    "id": "30",
     "header": "Market Analysis",
     "type": "Research",
     "status": "Done",
@@ -270,7 +270,7 @@
     "reviewer": "Sophia Martinez"
   },
   {
-    "id": 31,
+    "id": "31",
     "header": "Competitor Comparison",
     "type": "Research",
     "status": "In Process",
@@ -279,7 +279,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 32,
+    "id": "32",
     "header": "Maintenance Plan",
     "type": "Technical content",
     "status": "Done",
@@ -288,7 +288,7 @@
     "reviewer": "Alex Thompson"
   },
   {
-    "id": 33,
+    "id": "33",
     "header": "User Personas",
     "type": "Research",
     "status": "In Process",
@@ -297,7 +297,7 @@
     "reviewer": "Nina Patel"
   },
   {
-    "id": 34,
+    "id": "34",
     "header": "Accessibility Compliance",
     "type": "Legal",
     "status": "Done",
@@ -306,7 +306,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 35,
+    "id": "35",
     "header": "Performance Metrics",
     "type": "Technical content",
     "status": "In Process",
@@ -315,7 +315,7 @@
     "reviewer": "David Kim"
   },
   {
-    "id": 36,
+    "id": "36",
     "header": "Disaster Recovery Plan",
     "type": "Technical content",
     "status": "Done",
@@ -324,7 +324,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 37,
+    "id": "37",
     "header": "Third-party Integrations",
     "type": "Technical content",
     "status": "In Process",
@@ -333,7 +333,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 38,
+    "id": "38",
     "header": "User Feedback Summary",
     "type": "Research",
     "status": "Done",
@@ -342,7 +342,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 39,
+    "id": "39",
     "header": "Localization Strategy",
     "type": "Narrative",
     "status": "In Process",
@@ -351,7 +351,7 @@
     "reviewer": "Maria Garcia"
   },
   {
-    "id": 40,
+    "id": "40",
     "header": "Mobile Compatibility",
     "type": "Technical content",
     "status": "Done",
@@ -360,7 +360,7 @@
     "reviewer": "James Wilson"
   },
   {
-    "id": 41,
+    "id": "41",
     "header": "Data Migration Plan",
     "type": "Technical content",
     "status": "In Process",
@@ -369,7 +369,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 42,
+    "id": "42",
     "header": "Quality Assurance Protocols",
     "type": "Technical content",
     "status": "Done",
@@ -378,7 +378,7 @@
     "reviewer": "Priya Singh"
   },
   {
-    "id": 43,
+    "id": "43",
     "header": "Stakeholder Analysis",
     "type": "Research",
     "status": "In Process",
@@ -387,7 +387,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 44,
+    "id": "44",
     "header": "Environmental Impact Assessment",
     "type": "Research",
     "status": "Done",
@@ -396,7 +396,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 45,
+    "id": "45",
     "header": "Intellectual Property Rights",
     "type": "Legal",
     "status": "In Process",
@@ -405,7 +405,7 @@
     "reviewer": "Sarah Johnson"
   },
   {
-    "id": 46,
+    "id": "46",
     "header": "Customer Support Framework",
     "type": "Narrative",
     "status": "Done",
@@ -414,7 +414,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 47,
+    "id": "47",
     "header": "Version Control Strategy",
     "type": "Technical content",
     "status": "In Process",
@@ -423,7 +423,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 48,
+    "id": "48",
     "header": "Continuous Integration Pipeline",
     "type": "Technical content",
     "status": "Done",
@@ -432,7 +432,7 @@
     "reviewer": "Michael Chen"
   },
   {
-    "id": 49,
+    "id": "49",
     "header": "Regulatory Compliance",
     "type": "Legal",
     "status": "In Process",
@@ -441,7 +441,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 50,
+    "id": "50",
     "header": "User Authentication System",
     "type": "Technical content",
     "status": "Done",
@@ -450,7 +450,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 51,
+    "id": "51",
     "header": "Data Analytics Framework",
     "type": "Technical content",
     "status": "In Process",
@@ -459,7 +459,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 52,
+    "id": "52",
     "header": "Cloud Infrastructure",
     "type": "Technical content",
     "status": "Done",
@@ -468,7 +468,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 53,
+    "id": "53",
     "header": "Network Security Measures",
     "type": "Technical content",
     "status": "In Process",
@@ -477,7 +477,7 @@
     "reviewer": "Lisa Wong"
   },
   {
-    "id": 54,
+    "id": "54",
     "header": "Project Timeline",
     "type": "Planning",
     "status": "Done",
@@ -486,7 +486,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 55,
+    "id": "55",
     "header": "Resource Allocation",
     "type": "Planning",
     "status": "In Process",
@@ -495,7 +495,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 56,
+    "id": "56",
     "header": "Team Structure and Roles",
     "type": "Planning",
     "status": "Done",
@@ -504,7 +504,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 57,
+    "id": "57",
     "header": "Communication Protocols",
     "type": "Planning",
     "status": "In Process",
@@ -513,7 +513,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 58,
+    "id": "58",
     "header": "Success Metrics",
     "type": "Planning",
     "status": "Done",
@@ -522,7 +522,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 59,
+    "id": "59",
     "header": "Internationalization Support",
     "type": "Technical content",
     "status": "In Process",
@@ -531,7 +531,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 60,
+    "id": "60",
     "header": "Backup and Recovery Procedures",
     "type": "Technical content",
     "status": "Done",
@@ -540,7 +540,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 61,
+    "id": "61",
     "header": "Monitoring and Alerting System",
     "type": "Technical content",
     "status": "In Process",
@@ -549,7 +549,7 @@
     "reviewer": "Daniel Park"
   },
   {
-    "id": 62,
+    "id": "62",
     "header": "Code Review Guidelines",
     "type": "Technical content",
     "status": "Done",
@@ -558,7 +558,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 63,
+    "id": "63",
     "header": "Documentation Standards",
     "type": "Technical content",
     "status": "In Process",
@@ -567,7 +567,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 64,
+    "id": "64",
     "header": "Release Management Process",
     "type": "Planning",
     "status": "Done",
@@ -576,7 +576,7 @@
     "reviewer": "Assign reviewer"
   },
   {
-    "id": 65,
+    "id": "65",
     "header": "Feature Prioritization Matrix",
     "type": "Planning",
     "status": "In Process",
@@ -585,7 +585,7 @@
     "reviewer": "Emma Davis"
   },
   {
-    "id": 66,
+    "id": "66",
     "header": "Technical Debt Assessment",
     "type": "Technical content",
     "status": "Done",
@@ -594,7 +594,7 @@
     "reviewer": "Eddie Lake"
   },
   {
-    "id": 67,
+    "id": "67",
     "header": "Capacity Planning",
     "type": "Planning",
     "status": "In Process",
@@ -603,7 +603,7 @@
     "reviewer": "Jamik Tashpulatov"
   },
   {
-    "id": 68,
+    "id": "68",
     "header": "Service Level Agreements",
     "type": "Legal",
     "status": "Done",

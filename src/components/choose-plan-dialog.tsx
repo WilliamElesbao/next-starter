@@ -16,8 +16,8 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useDialog } from "@/contexts/dialog-context";
 import { useSubscriptionForm } from "@/hooks/stripe/use-subscription-form";
-import { Form, FormField } from "../ui/form";
 import { Badge } from "./badge";
+import { Form, FormField } from "./ui/form";
 
 interface ChoosePlanDialogProps {
   plans?: Plan[];
