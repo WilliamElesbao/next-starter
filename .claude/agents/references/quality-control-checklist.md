@@ -2,28 +2,31 @@
 
 > Used by `agents/code-reviewer.md`. Every item maps to a rule document.
 
-## Architecture — `rules/feature-based-architecture.md`
+## Architecture — `rules/architecture.md`
 
 - [ ] Code follows feature-based architecture: feature code inside `src/features/{feature}/`
 - [ ] No cross-feature imports (feature A importing from feature B)
-- [ ] shadcn/ui primitives in `src/components/ui/` — not created manually
 - [ ] Shared complex components in `src/components/`
 - [ ] Shared hooks in `src/hooks/{domain}/`
 - [ ] File names follow `kebab-case` convention
 - [ ] Hooks prefixed with `use-`; action files suffixed with `.actions.ts`
+- [ ] Named exports (no default exports)
 
-## Components — `skills/component.md`
+## Components — `rules/components.md`, `rules/primitive-components.md`, `rules/compound-components.md`
 
+- [ ] UI primitives in `src/components/ui/` — no business logic
 - [ ] Complex components use the Compound Component pattern
 - [ ] Props defined as a named `interface`
+- [ ] Variants with `cva()` from `class-variance-authority`
 - [ ] `<Image />` (next/image) used — no raw `<img>` tags
 - [ ] No hardcoded English strings — all text via `useTranslations()` / `getTranslations()`
 - [ ] `cn()` used for all conditional class merging
-- [ ] `'use client'` present only when necessary (hooks, browser APIs, event handlers)
+- [ ] `data-slot` attribute for component identification
+- [ ] `'use client'` present only when necessary (state, effects, browser APIs)
 - [ ] `'use client'` boundary pushed as low in the tree as possible
-- [ ] Unit test added alongside new or modified component
+- [ ] No `React.FC` — plain function components
 
-## Hooks & State — `skills/common-pattern.md`
+## Data & State — `rules/data-fetching.md`, `rules/forms.md`
 
 - [ ] TanStack Query used for server state (not `useState` + `useEffect`)
 - [ ] `useQuery` calls include `staleTime`
@@ -31,6 +34,8 @@
 - [ ] `useMutation` invalidates relevant queries on success
 - [ ] Form schemas defined with Zod in a separate `form-schema.ts` file
 - [ ] Types derived from schemas with `z.infer<typeof Schema>`
+- [ ] Zod v4 custom errors: `{ error: "localized.message" }`
+- [ ] Form inputs wrapped with `<Controller />` from react-hook-form
 
 ## Contexts & Providers
 
@@ -38,13 +43,14 @@
 - [ ] Providers live in `src/providers/`
 - [ ] Context value and updater both exported from a single context file
 
-## TypeScript — `rules/typescript-pattern.md`
+## TypeScript — `rules/typescript.md`
 
 - [ ] No `any` types
 - [ ] No excessive type assertions (`as SomeType`)
 - [ ] TypeScript `enum` replaced with `const` object + derived type
-- [ ] Prisma types imported from `@/prisma/generated/models` — not redefined manually
+- [ ] Prisma types imported from `@prisma/client` — not redefined manually
 - [ ] Server Action return type is explicitly `Promise<ActionResult<T>>`
+- [ ] No `forwardRef` — use `ref` as regular prop
 
 ## Server Actions — `rules/server-actions.md`
 
@@ -57,13 +63,13 @@
 - [ ] Raw DB / Stripe / external error messages not returned to client
 - [ ] `env` from `src/env.ts` — no `process.env` in action files
 
-## Server Components — `rules/performance.md`
+## Server Components — `rules/components.md`, `rules/loading-states.md`
 
 - [ ] Async data fetching done directly in the component (`async/await`)
 - [ ] No `useState`, `useEffect`, or browser APIs
 - [ ] Wrapped in `<Suspense>` with a skeleton fallback
 
-## Client Components — `rules/performance.md`
+## Client Components — `rules/components.md`, `rules/primitive-components.md`
 
 - [ ] `'use client'` present and required
 - [ ] No direct DB or Server Action calls outside of mutations
@@ -77,17 +83,17 @@
 - [ ] No `it.skip` or `it.todo` left in merged code
 - [ ] Mocks only applied to external dependencies
 
-## Styling — `rules/styling.md`
+## Styling — `rules/primitive-components.md`, `globals.css`
 
 - [ ] Tailwind utility classes only — no inline styles
-- [ ] Semantic CSS variable tokens used — no hardcoded color values
-- [ ] `src/components/ui/` files not modified directly
+- [ ] Theme CSS variables used — no hardcoded color values
+- [ ] `data-slot` + `data-*` attributes for states (not conditional className)
 
-## i18n — `agents/i18n-key-validator.md`
+## i18n — `rules/i18n.md`
 
 - [ ] New keys added to both `en.json` and `pt-BR.json`
 - [ ] `useTranslations()` used in Client Components
-- [ ] `getTranslations()` used in Server Components
+- [ ] `getTranslations()` used in Server Components (await)
 - [ ] Navigation via `@/lib/i18n/navigation` — not `next/link` / `next/navigation` directly
 
 ## Security — `skills/security-review.md`
@@ -108,7 +114,7 @@
 | Skill | Reference |
 |---|---|
 | Code review | `agents/code-reviewer.md` |
-| Component review | `skills/component.md` |
-| `next-intl` usage | `agents/i18n-key-validator.md` |
-| TanStack Query | `skills/common-pattern.md` |
+| Component review | `rules/components.md` + `rules/primitive-components.md` + `rules/compound-components.md` |
+| `next-intl` usage | `rules/i18n.md` |
+| Data fetching | `rules/data-fetching.md` + `rules/forms.md` |
 | TDD | `rules/testing.md` |

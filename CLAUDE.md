@@ -1,129 +1,127 @@
 # Next Starter
 
-## Overview
-
-This is a Next.js 16 starter project with TypeScript, featuring a feature-based architecture, server-first approach, and modern tooling.
+Next.js 16 starter with TypeScript, feature-based architecture, server-first approach, and modern tooling.
 
 ## Tech Stack
 
-- **Framework**: Next.js 16.2.6 with React 19.2.4
-- **Language**: TypeScript 5.9+
-- **Package Manager**: Bun 1.3+
-- **Database**: PostgreSQL + Prisma 7.8.0
-- **Styling**: Tailwind CSS v4 + Radix UI
-- **State Management**: TanStack Query v5
-- **Forms**: React Hook Form + Zod
-- **Auth**: Better Auth
-- **Email**: Resend + React Email
-- **Payments**: Stripe
-- **Testing**: Vitest
-- **Linting**: Biome
-- **Containization**: Docker
-
-## Architecture
-This project uses Feature-Based Architecture
-
-See [`.claude/rules/feature-based-architecture.md`](./.claude/rules/feature-based-architecture.md)
-
-## Core Principles
-1. Server Components First — Use Server Components por padrão. Adicione "use client" somente quando o componente precisar de estado, efeitos, APIs do navegador ou interação direta do usuário. Mantenha a menor árvore possível de Client Components.
-2. Feature Isolation - Features are self-contained and don't cross-import
-3. Type Safety - Strong typing everywhere; no any; avoid unnecessary type assertions and prefer proper typing before resorting to them
-4. Named Exports - No default exports (except App Router pages)
-5. No Barrel Files - Avoid pure re-export index.ts files;
-6. DRY Code - Extract repeated patterns into utilities
-7. Performance - Leverage Next.js caching, optimistic updates, cursor pagination
-8. TDD - você deve escrever o teste automatizado de uma funcionalidade antes de escrever o código que a fará funcionar
+| Area | Tech | Version |
+|---|---|---|
+| Framework | Next.js (App Router) + React | 16 + 19 |
+| Package Manager | Bun | 1.3+ |
+| Validation | Zod | v4 |
+| Forms | React Hook Form + @hookform/resolvers | 7.72 |
+| i18n | next-intl | 4.12 |
+| UI Library | Radix UI | Latest |
+| Variants | class-variance-authority (cva) | 0.7 |
+| CSS | Tailwind CSS v4 + tw-animate-css | 4 |
+| DB ORM | Prisma | 7.8 |
+| Auth | Better Auth | 1.6 |
+| Payments | Stripe | 22 |
+| Email | Resend + React Email | Latest |
+| Client State | TanStack Query | 5.100 |
+| Testing | Vitest + React Testing Library | 4 |
+| Linting | Biome | 2.2 |
 
 ## Project Structure
+
 ```
-next-starter/
-├── emails/                         # React Email & Email Templates
-├── prisma/                         # Prisma config
-│   └── schema.prisma               # Prisma Models
-├── prisma.config.ts                # Prisma config
-├── public/                         # Assets
-└── src/
-    ├── actions/                    # Server Actions (external service calls)
-    ├── app/                        # Next.js App Router
-    │   ├── [locale]/               # i18n routes
-    │   ├── api/                    # Next.js api route
-    │   │   └── auth/               # Better Auth api config
-    │   │       └── [...all]/
-    │   │           └── route.ts
-    │   └── layout.tsx              # global layout setup
-    ├── components/                 # Shared UI components (Header, Footer, Dialogs, etc.)
-    │   └── ui/                     # Base UI primitives (Avatar, Button, Text, etc.)
-    ├── constants/                  # Shared constants
-    ├── contexts/                   # Global contexts
-    ├── database/                   # Client to connect to the database
-    ├── feature/                    # Feature modules
-    ├── hooks/                      # Shared hooks
-    ├── lib/                        # external integrations
-    │   ├── better-auth/
-    │   ├── dayjs/
-    │   ├── i18n/
-    │   ├── react-query/
-    │   ├── resend/
-    │   ├── shadcn/
-    │   └── stripe/
-    ├── middleware/                 # Next.js middeware helpers
-    ├── providers/                  # Global Providers (ThemeProvider, QueryClientProvider)
-    ├── scripts/                    # Maintenance script
-    ├── styles/                     # global styles
-    ├── utils/                      # Shared utilities
-    ├── proxy.ts                    # Next.js middleware
-    └── env.ts                      # Environment validation
+src/
+├── actions/              # Server Actions (only external service callers)
+├── app/                  # Next.js App Router
+│   ├── [locale]/         # i18n-aware routes
+│   └── api/auth/         # Better Auth API handler
+├── components/           # Shared components
+│   ├── ui/               # shadcn/ui primitives (Radix UI)
+│   └── origin-ui/        # App-specific composition components
+├── constants/            # App-wide constants
+├── contexts/             # React contexts (scoped, not global unless required)
+├── database/             # Prisma connection
+├── env.ts                # Environment validation (single source of truth)
+├── features/             # Self-contained feature modules
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── sign-in/
+│   │   └── sign-up/
+│   └── dashboard/
+├── hooks/                # Cross-feature shared hooks
+├── lib/                  # Third-party configs
+│   ├── better-auth/
+│   ├── i18n/             # Routing, navigation, locale loading
+│   ├── react-query/
+│   ├── resend/
+│   ├── shadcn/           # cn() utility
+│   └── stripe/
+├── middleware/           # Next.js middleware modules
+├── providers/            # Theme, QueryClient, Toaster providers
+├── scripts/              # i18n validation scripts
+├── styles/               # globals.css (CSS variables, Tailwind)
+└── utils/                # Pure utilities (safe-promise, format-price, etc.)
 ```
 
-## Documentation Structure
-`.claude/rules/` - Coding standards and conventions (auto-included by file pattern)
-`.claude/skills/` - Reference patterns and examples (manually included)
-`.claude/commands/` - Custom commands (/review, /fix-issue)
-`.claude/agents/` - Specialized agents (code-reviewer, security-auditor)
-`.claude/memory/` - <add a bit description here>
+## Documentation
+
+| Area | File |
+|---|---|
+| Architecture & Project Structure | `.claude/rules/architecture.md` |
+| Component Organization | `.claude/rules/components.md` |
+| Primitive Components (cva, Radix UI) | `.claude/rules/primitive-components.md` |
+| Compound Components | `.claude/rules/compound-components.md` |
+| Loading States (Suspense, Activity) | `.claude/rules/loading-states.md` |
+| Forms (RHF + Zod v4) | `.claude/rules/forms.md` |
+| Data Fetching (Server Actions, TanStack Query) | `.claude/rules/data-fetching.md` |
+| Testing (Vitest, TDD) | `.claude/rules/testing.md` |
+| i18n (next-intl) | `.claude/rules/i18n.md` |
+| TypeScript Patterns | `.claude/rules/typescript.md` |
 
 ## Common Commands
 
 ```bash
-# Development
-bun run dev              # Start dev server
+bun run dev              # Development server
 bun run build            # Production build
-bun run start            # Start production server
-
-# Database
-bun run db:generate      # Generate Prisma client
-bun run db:migrate       # Run migrations
-bun run db:studio        # Open Prisma Studio
-
-# Code Quality
+bun run test             # Run tests
 bun run lint:fix         # Fix linting issues
 bun run format           # Format code
-bun run test             # Run tests
-bun run test:coverage    # Test with coverage
-
-# i18n
+bun run db:migrate       # Run migrations
+bun run db:studio        # Prisma Studio
 bun run locale-check     # Validate translations
-bun run locale-unused    # Find unused keys
-
-# Docker
-docker compose up -d     # Start services
-docker compose down      # Stop services
 ```
+
+## Prohibited Practices
+
+| ❌ Do Not | ✅ Instead |
+|---|---|
+| `console.log` in production | Use proper logging or remove |
+| `process.env.X` in app code | Import `env` from `@/env` |
+| Default exports | Named exports always |
+| Barrel files (`index.ts`) | Direct imports only |
+| `React.FC` | Plain function components |
+| `any` type | `unknown`, generic `<T>`, or proper type |
+| `forwardRef` (deprecated in React 19) | `ref` as regular prop |
+| TypeScript `enum` | `const` object + derived type |
+| `<img>` tag | `next/image` (`<Image />`) |
+| Hardcoded strings | Translation keys from locale files |
+| Modify `prisma/generated/` | Hand off to Prisma CLI |
+| Feature cross-importing | Lift to `src/hooks/` or `src/utils/` |
+
 
 ## Quick Reference
 
-- **File Naming**: `kebab-case` (e.g., `user-card.tsx`, `use-modal.ts`)
-- **Component Props**: Extend `React.ComponentProps<'element'>` + `VariantProps`
-- **Styling**: Use `cn()` for class merging, `data-*` attributes for states
-- **Environment**: Import from `@/env`, never use `process.env` directly
-- **Database**: Always use Server Actions, never expose Prisma to client
-- **Forms**: React Hook Form + Zod validation + Server Actions
-- **TDD**: Test-Driven Development, teste + funcionalidade
+| Topic | File |
+|---|---|
+| Architecture & module boundaries | `rules/architecture.md` |
+| Component patterns | `rules/components.md` |
+| Primitive components (cva, Radix) | `rules/primitive-components.md` |
+| Compound components | `rules/compound-components.md` |
+| Loading states (Suspense, Activity) | `rules/loading-states.md` |
+| Form handling (RHF + Zod v4) | `rules/forms.md` |
+| Data fetching (Server Actions, TanStack Query) | `rules/data-fetching.md` |
+| Server Action anatomy | `rules/server-actions.md` |
+| Testing (Vitest, TDD) | `rules/testing.md` |
+| i18n (next-intl, localized validation) | `rules/i18n.md` |
+| TypeScript patterns | `rules/typescript.md` |
 
-## Getting Help
+## Agents
 
-- Check `.claude/rules/` for specific topics (TypeScript, React, styling, etc.)
-- Check `.claude/skills/` for patterns and examples
-- Run `/review` to review code changes
-- Run `/fix-issue <number>` to fix a GitHub issue
+- `/review` — Code review bot
+- `/fix-issue <number>` — Automated fix for GitHub issues
