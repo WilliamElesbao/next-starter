@@ -69,7 +69,7 @@ steps:
       SONAR_TOKEN:
         from_secret: SONAR_TOKEN
     commands:
-      - sonar-scanner
+      - sonar-scanner -Dsonar.working.directory=/tmp/.scannerwork
     depends_on:
       - tests
 
