@@ -12,7 +12,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { DialogProvider } from "@/contexts/dialog-context";
 import type { SessionResponse } from "@/lib/better-auth/auth";
 import { useWelcomeToast } from "../auth/hooks/use-welcome-toast";
-import data from "./data.json";
+import { useDashboard } from "./hooks/use-dashboard";
 
 interface DashboardWrapperProps {
   user: SessionResponse["user"];
@@ -26,6 +26,7 @@ export function DashboardPage({
   subscription,
 }: Readonly<DashboardWrapperProps>) {
   useWelcomeToast();
+  const { documents, total, pagination, setPagination } = useDashboard();
 
   return (
     <DialogProvider>
@@ -47,7 +48,12 @@ export function DashboardPage({
                 <div className="px-4 lg:px-6">
                   <ChartAreaInteractive />
                 </div>
-                <DataTable data={data} />
+                <DataTable
+                  data={documents}
+                  rowCount={total}
+                  pagination={pagination}
+                  onPaginationChange={setPagination}
+                />
               </div>
             </div>
           </div>

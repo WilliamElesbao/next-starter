@@ -43,6 +43,8 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  type OnChangeFn,
+  type PaginationState,
   type Row,
   type SortingState,
   useReactTable,
@@ -333,8 +335,25 @@ function DraggableRow({ row }: { row: Row<DataTableItem> }) {
   );
 }
 
-export function DataTable({ data: initialData }: { data: DataTableItem[] }) {
-  const [data, setData] = React.useState(() => initialData);
+interface DataTableProps {
+  data: DataTableItem[];
+  rowCount: number;
+  pagination: PaginationState;
+  onPaginationChange: OnChangeFn<PaginationState>;
+}
+
+export function DataTable({
+  data: initialData,
+  rowCount,
+  pagination,
+  onPaginationChange,
+}: Readonly<DataTableProps>) {
+  const [data, setData] = React.useState<DataTableItem[]>(initialData);
+
+  React.useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
+
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -342,10 +361,6 @@ export function DataTable({ data: initialData }: { data: DataTableItem[] }) {
     [],
   );
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 10,
-  });
   const sortableId = React.useId();
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
@@ -361,6 +376,8 @@ export function DataTable({ data: initialData }: { data: DataTableItem[] }) {
   const table = useReactTable({
     data,
     columns,
+    rowCount,
+    manualPagination: true,
     state: {
       sorting,
       columnVisibility,
@@ -374,7 +391,7 @@ export function DataTable({ data: initialData }: { data: DataTableItem[] }) {
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
-    onPaginationChange: setPagination,
+    onPaginationChange,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
