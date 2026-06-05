@@ -14,106 +14,118 @@ paths:
 |---|---|---|
 | Server Component async | Server → Client (props) | Initial data, read-only, SEO |
 | Server Actions | Client → Server (mutation) | Forms, mutations, external services |
-| TanStack Query (useQuery/useInfiniteQuery) | Client → API | Client-side read data, polling, caching |
-| TanStack Query (useMutation) | Client → Server | Wrapping Server Actions with cache invalidation |
+| `useQuery` | Client | Client-side reads, polling, caching |
+| `useInfiniteQuery` | Client | Load more / infinite scroll |
+| `useMutation` | Client → Server | Server Actions with cache invalidation |
 
 ## Server Component Data Fetching
 
-Default approach. Direct database access, no `'use client'` needed.
-
 ```tsx
-// ✅ Server Component — async, direct DB access
 async function SubscriptionList() {
   const subscriptions = await db.subscription.findMany()
-  return (
-    <ul>
-      {subscriptions.map(s => (
-        <li key={s.id}>{s.status}</li>
-      ))}
-    </ul>
-  )
+  return <ul>{subscriptions.map(s => <li key={s.id}>{s.status}</li>)}</ul>
 }
 ```
-
-Pass serializable data as props to Client Component children.
-
-## Server Actions (Mutations)
-
-See `server-actions.md` for full pattern. All external service calls from the UI must go through Server Actions in `src/actions/`.
-
-```ts
-// src/actions/subscription.actions.ts
-"use server"
-
-import { auth } from "@/lib/better-auth/auth"
-import { db } from "@/database/prisma-connection"
-import { safePromise } from "@/utils/safe-promise"
-import { z } from "zod"
-
-const CancelSchema = z.object({ subscriptionId: z.string().uuid() })
-
-export async function cancelSubscription(input: z.infer<typeof CancelSchema>) {
-  const session = await auth.api.getSession({ headers: headers() })
-  if (!session) return { success: false, error: "Unauthorized" }
-
-  const parsed = CancelSchema.safeParse(input)
-  if (!parsed.success) return { success: false, error: parsed.error.message }
-
-  const [error] = await safePromise(
-    db.subscription.update({ where: { id: parsed.data.subscriptionId }, data: { status: "cancelled" } })
-  )
-  if (error) return { success: false, error: "Failed to cancel subscription" }
-
-  return { success: true, data: undefined }
-}
-```
-
-## Hook Organization
-
-```
-src/hooks/{domain}/
-├── use-subscription.ts          # Shared hook
-├── subscription.queries.ts      # TanStack Query useQuery/useInfiniteQuery wrappers
-└── subscription.mutations.ts    # TanStack Query useMutation wrappers
-```
-
-Query/mutation files group related TanStack Query logic within a domain.
 
 ## TanStack Query — Client-Side Reads
-
 ```ts
-// src/hooks/stripe/use-subscription.ts
-import { useQuery } from "@tanstack/react-query"
-
 export function useSubscription(userId: string) {
   return useQuery({
-    queryKey: ["subscription", userId],
+    queryKey: ["subscription", userId],   // [domain, ...identifiers]
     queryFn: () => fetch(`/api/subscription?userId=${userId}`).then(r => r.json()),
-    staleTime: 5 * 60 * 1000,    // Required — prevents refetch on every mount
-    enabled: !!userId,             // Required — only run when userId is available
+    staleTime: 5 * 60 * 1000,
+    enabled: !!userId,
   })
 }
 ```
 
-### Query Key Convention
+## TanStack Query — Paginated Lists
+| UI pattern | Hook | When |
+|---|---|---|
+| Numbered pages (1, 2, 3…) | `useQuery` + `keepPreviousData` | User navigates to any page |
+| Load more / infinite scroll | `useInfiniteQuery` | Sequential, cursor-based loading |
+
+### Offset Pagination — Numbered Pages
+
+`placeholderData: keepPreviousData` keeps the previous page visible while loading. Disable "Next" when `isPlaceholderData` is true.
 
 ```ts
-["subscription", userId]        // [domain, ...identifiers]
-["plans"]                        // Static data
-["user", userId, "posts"]        // Nested resource
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
+interface DocumentsPage { items: DocumentItem[]; totalPages: number }
+export function useDocuments(page: number) {
+  return useQuery({
+    queryKey: ["documents", page],
+    queryFn: (): Promise<DocumentsPage> =>
+      fetch(`/api/documents?page=${page}&limit=20`).then(r => r.json()),
+    placeholderData: keepPreviousData,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+```
+
+```tsx
+function DocumentTable() {
+  const [page, setPage] = useState(1)
+  const { data, isLoading, isPlaceholderData } = useDocuments(page)
+  if (isLoading) return <Skeleton className="h-48 w-full" />
+  return (
+    <>
+      <ul>{data?.items.map(item => <li key={item.id}>{item.title}</li>)}</ul>
+      <div className="flex items-center gap-2">
+        <Button onClick={() => setPage(p => p - 1)} disabled={page === 1}>Prev</Button>
+        <span>{page} / {data?.totalPages ?? "—"}</span>
+        <Button
+          onClick={() => setPage(p => p + 1)}
+          disabled={isPlaceholderData || page === data?.totalPages}
+        >Next</Button>
+      </div>
+    </>
+  )
+}
+```
+
+### Cursor-Based Pagination — Load More / Infinite Scroll
+
+`initialPageParam` is required in v5. Never call `fetchNextPage` while `isFetching` — a single cache entry is shared across all pages.
+
+```ts
+import { useInfiniteQuery } from "@tanstack/react-query"
+interface TransactionPage { items: Transaction[]; nextCursor: string | null }
+export function useTransactions() {
+  return useInfiniteQuery({
+    queryKey: ["transactions"],
+    queryFn: ({ pageParam }): Promise<TransactionPage> =>
+      fetch(`/api/transactions?cursor=${pageParam}&limit=20`).then(r => r.json()),
+    initialPageParam: "",
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    staleTime: 5 * 60 * 1000,
+  })
+}
+```
+
+```tsx
+function TransactionList() {
+  const { data, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, isLoading } =
+    useTransactions()
+  const items = data?.pages.flatMap(p => p.items) ?? []
+  if (isLoading) return <Skeleton className="h-48 w-full" />
+  return (
+    <>
+      <ul>{items.map(item => <li key={item.id}>{item.description}</li>)}</ul>
+      <Button
+        onClick={() => fetchNextPage()}
+        disabled={!hasNextPage || isFetching}
+      >
+        {isFetchingNextPage ? "Loading..." : "Load more"}
+      </Button>
+    </>
+  )
+}
 ```
 
 ## TanStack Query — Wrapping Server Actions
-
 ```ts
-// src/hooks/stripe/use-subscription-form.ts
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { toast } from "sonner"
-import { cancelSubscription } from "@/actions/subscription.actions"
-import { queryClient } from "@/lib/react-query/query-client";
-
 export function useCancelSubscription() {
-
   return useMutation({
     mutationFn: cancelSubscription,
     onSuccess: () => {
@@ -125,27 +137,14 @@ export function useCancelSubscription() {
 }
 ```
 
-## Loading & Error States
-
-```tsx
-function SubscriptionList() {
-  const { data, isLoading, isError, error } = useSubscription(userId)
-
-  if (isLoading) return <Skeleton className="h-48 w-full" />
-  if (isError) return <p className="text-destructive">{error.message}</p>
-  if (!data?.length) return <p className="text-muted-foreground">No subscriptions</p>
-
-  return <ul>{data.map(item => <li key={item.id}>{item.name}</li>)}</ul>
-}
-```
-
 ## Rules Summary
 
 | Rule | Enforcement |
 |---|---|
-| Server Actions for all mutations | Required |
-| `safePromise` for async DB/external calls | Required |
-| `staleTime` on all `useQuery` | Required |
+| `staleTime` on all `useQuery` and `useInfiniteQuery` | Required |
 | `enabled` guard on `useQuery` with optional params | Required |
-| Return `{ success, data/error }` from Server Actions | Required |
+| Numbered pages → `useQuery` + `keepPreviousData` | Required |
+| Load more / infinite scroll → `useInfiniteQuery` | Required |
+| `initialPageParam` set on every `useInfiniteQuery` | Required (v5) |
+| Never call `fetchNextPage` while `isFetching` is true | Required |
 | Never expose raw DB/Stripe errors to client | Required |
