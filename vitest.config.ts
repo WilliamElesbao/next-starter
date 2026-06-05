@@ -13,6 +13,12 @@ export default defineConfig({
     environment: "node",
     setupFiles: ["./vitest.setup.ts"],
     coverage: {
+      thresholds:{
+        lines: 80,
+        functions: 80,
+        branches: 80,
+        statements: 80,
+      },
       provider: "istanbul",
       reporter: ["lcov", "text"],
       include: ["src/**/*.ts", "src/**/*.tsx"],
