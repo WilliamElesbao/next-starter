@@ -3,7 +3,7 @@
 import {
   createContext,
   type FC,
-  type ReactNode,
+  type PropsWithChildren,
   useContext,
   useMemo,
   useState,
@@ -16,9 +16,7 @@ interface DialogContextType {
 
 const DialogContext = createContext<DialogContextType | undefined>(undefined);
 
-interface DialogProviderProps {
-  children: ReactNode;
-}
+interface DialogProviderProps extends PropsWithChildren {}
 
 export const DialogProvider: FC<DialogProviderProps> = ({ children }) => {
   const [dialogIsOpen, setDialogIsOpen] = useState(false);

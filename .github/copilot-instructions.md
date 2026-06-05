@@ -29,151 +29,196 @@ Next Starter is a full-stack Next.js 16 template with React 19, designed for Saa
 
 ```
 src/
-├── actions/              # Server Actions (only layer touching external services from UI)
+├── actions/              # Server Actions — only layer touching external services from UI
 ├── app/                  # Next.js App Router
-│   └── [locale]/        # i18n-aware routes
-├── components/          # UI components
-│   ├── ui/             # shadcn/ui primitives (Radix UI based)
-│   └── origin-ui/      # App-specific composition components
-├── constants/           # Shared constants
-├── context/            # React contexts
-├── database/           # Prisma connection helpers
-├── env.ts              # Centralized environment validation with Zod
-├── feature/            # Feature modules (isolated UI, hooks, actions)
-│   ├── auth/          # Authentication feature
-│   └── dashboard/     # Dashboard feature
-├── hooks/              # Custom React hooks
-├── lib/                # Platform integrations
-│   ├── better-auth/   # Better Auth configuration
-│   ├── dayjs/         # Date utilities
-│   ├── i18n/          # Internationalization
-│   ├── react-query/   # TanStack Query setup
-│   ├── resend/        # Email service
-│   ├── shadcn/        # shadcn/ui utilities
-│   └── stripe/        # Stripe client
-├── middleware/         # Next.js middleware (auth, i18n, cookies)
-├── providers/          # React providers
-├── scripts/            # Maintenance scripts (i18n validation)
-├── styles/             # Global styles
-└── utils/              # Shared utilities
+│   ├── [locale]/         # i18n-aware routes
+│   └── api/              # API routes (Better Auth, webhooks)
+├── components/           # Shared components
+│   └── ui/               # shadcn/ui primitives (Radix UI based)
+├── constants/            # Shared constants
+├── contexts/             # Shared contexts
+├── database/             # Prisma connection helper
+├── dev/                  # Devtools (development only)
+├── env.ts                # Centralized environment validation with Zod
+├── features/             # Feature modules (isolated UI, hooks, actions)
+│   ├── auth/
+│   └── dashboard/
+├── hooks/                # Cross-feature shared hooks
+├── lib/                  # Platform integrations
+├── middleware/           # Next.js middleware (auth, i18n, cookies)
+├── providers/            # React providers
+├── scripts/              # Maintenance scripts (i18n validation)
+├── styles/               # Global styles
+├── utils/                # Shared utilities
+├── stores/               # Global state stores
+└── env.ts                # Environment validation (single source of truth)
 
-prisma/                # Prisma schema, migrations, and generated types
-emails/                 # React Email templates and assets
-docs/                   # Setup and infrastructure documentation
-public/                 # Static assets
+prisma/                   # Prisma schema, migrations, generated types
+react-email/emails/       # React Email templates
+docs/                     # Setup and infrastructure documentation
+public/                   # Static assets
 ```
 
-## Architectural Pattern
-
-### Platform vs Features
-
-This project follows a modular "platform + features" pattern:
+## Architecture & Isolation
 
 - **Platform code** lives in `src/lib`, `src/providers`, `src/middleware`, `src/database`, and `src/utils` — shared infrastructure
-- **Feature code** lives in `src/feature/*` with isolated UI, hooks, and actions — self-contained modules
-- **UI components** are split into:
-  - `src/components/ui/`: shadcn/ui primitives (Radix UI components with custom styling)
-  - `src/components/origin-ui/`: App-specific composition components built from UI primitives
-  - `src/feature/*/components/`: Feature-specific components
-- **Server actions** live in `src/actions/` and should be the only layer touching external services from the UI
+- **Feature code** lives in `src/features/*` with isolated UI, hooks, and actions — self-contained modules
+- **UI components**:
+  - `src/components/ui/`: shadcn/ui primitives (Radix UI components, custom components)
+  - `src/components/`: App-specific compound components
+  - `src/features/*/components/`: Feature-specific components
+- **Server Actions** in `src/actions/` are the only layer that touches external services from the UI
 - **Environment validation** is centralized in `src/env.ts` using Zod
 
-## Component Development Patterns
+### Feature Module Structure
+
+```
+src/features/auth/
+├── components/
+├── hooks/
+├── sign-in/
+│   ├── hooks/
+│   │   ├── form-schema.ts
+│   │   └── use-sign-in-form.ts
+│   ├── sign-in-form.tsx
+│   └── sign-in-page.tsx
+└── sign-up/
+```
+
+### Isolation Rules
+
+| Allowed | Forbidden |
+|---|---|
+| Feature A uses global contexts (`src/contexts/`) | Feature A imports from Feature B |
+| Feature A uses `src/components/` | Feature A uses Feature B's hooks |
+| Feature A uses `src/hooks/` | Feature A reads Feature B contexts |
+
+Shared logic must be lifted to `src/hooks/` or `src/utils/`.
+
+## Components
 
 ### File Naming
 
-- Files: lowercase with hyphens → `user-card.tsx`, `use-modal.ts`
-- Always use named exports, never default exports
+- Files: lowercase with hyphens → `user-card.tsx`
+- Exports: named only (no default exports)
 - No barrel files (`index.ts`) for internal folders
 
-### Component Structure
+### Primitive Components (`src/components/ui/`)
+
+- Use `cva()` for variants and `twMerge()` for class merging
+- Always include `data-slot`
+- Use `data-variant` / `data-size` for variants
+- Use state data attributes (`data-disabled`, `data-open`, etc.) instead of conditional classes
+- Always include focus-visible rings: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- Icon-only buttons require `aria-label`
+- Spread `{...props}` at the end
+- Never hardcode colors — use theme tokens (`bg-background`, `text-foreground`, etc.)
+- Never use `<img>` — use `next/image`
 
 ```tsx
-import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import type { ComponentProps } from "react"
 import { cn } from "@/lib/shadcn/utils"
 
-const buttonVariants = cva(
-  "base-classes",
-  {
-    variants: {
-      variant: {
-        default: "variant-classes",
-        secondary: "variant-classes",
-      },
-      size: {
-        default: "size-classes",
-        sm: "size-classes",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-)
+const buttonVariants = cva("base-classes", {
+  variants: {
+    variant: { default: "...", secondary: "..." },
+    size: { default: "...", sm: "..." },
+  },
+  defaultVariants: { variant: "default", size: "default" },
+})
 
-function Button({
-  className,
-  variant,
-  size,
-  ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>) {
+export interface ButtonProps
+  extends ComponentProps<"button">,
+    VariantProps<typeof buttonVariants> {}
+
+export function Button({ className, variant, size, ...props }: ButtonProps) {
   return (
     <button
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
   )
 }
-
-export { Button, buttonVariants }
 ```
 
-### Styling Patterns
+### Compound Components
 
-- Always use `cn()` for class merging (from `@/lib/shadcn/utils`)
-- Always use `data-slot` for component identification
-- Use data-attributes for states: `data-disabled={disabled ? "" : undefined}`
-- Focus visible for interactive elements: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
-- Icon sizing: `<Check className="size-4" />` or `[&_svg]:size-3.5` in variants
-- aria-label for icon buttons: `<button aria-label="Close"><X className="size-4" /></button>`
-- Props spread at the end: `{...props}`
+- Use separate files per sub-component (kebab-case)
+- Assemble with `Object.assign(Root, { Sub: SubComponent, ... })`
 
-### Radix UI Usage
+### Server vs Client Components
 
-This project uses Radix UI components (not @base-ui/react):
+- Default to Server Components
+- Add `'use client'` only when state/effects, browser APIs, or TanStack Query hooks are required
+- Pass serializable props from Server → Client components
 
-```tsx
-import * as Dialog from "@radix-ui/react-dialog"
-<Dialog.Root><Dialog.Portal><Dialog.Overlay /><Dialog.Content /></Dialog.Portal></Dialog.Root>
+## Contexts & Providers
 
-import * as Tabs from "@radix-ui/react-tabs"
-<Tabs.Root><Tabs.List><Tabs.Trigger /></Tabs.List><Tabs.Content /></Tabs.Root>
+- Global contexts live in `src/contexts/`
+- Feature contexts live in `src/features/{feature}/contexts/`
+- Never import a feature context across features; promote to global if shared
+- Context files export exactly: interface, Provider, consumer hook
+- `createContext<Type | undefined>` and throw in hook when missing provider
+- Wrap context values in `useMemo`
 
-import * as Select from "@radix-ui/react-select"
-<Select.Root><Select.Trigger /><Select.Portal><Select.Content><Select.Item /></Select.Content></Select.Portal></Select.Root>
-```
+## Forms (RHF + Zod v4)
 
-### TypeScript Patterns
+- Zod schema is a factory using `useTranslations("validation")`
+- Use `z.email()` and `{ error: "..." }` for custom errors
+- Always wrap inputs with `<Controller />`
+- Feature forms follow compound component pattern
 
-```tsx
-// ✅ Extend ComponentProps + VariantProps
-interface ButtonProps
-  extends React.ComponentProps<"button">,
-    VariantProps<typeof buttonVariants> {}
+## Data Fetching
 
-// ✅ Import types from React
-import * as React from "react"
-import type { ComponentProps } from "react"
+- Prefer Server Components for read-only data
+- Use Server Actions for all mutations
+- Use `useQuery` / `useInfiniteQuery` with `staleTime`
+- Use `enabled` guard for optional params
+- Use `useInfiniteQuery` for lists, tables, history views
+- Use `safePromise` for DB/external calls in Server Actions
 
-// ❌ Do NOT use React.FC
-// ❌ Do NOT use any
-```
+## Server Actions
+
+- `'use server'` must be the first line
+- Validate inputs with Zod and derive types via `z.infer`
+- Auth check before any mutation
+- Verify ownership before DB writes
+- Return `{ success, data } | { success, error }`
+- Never return raw DB/Stripe errors
+
+## Loading States
+
+- Use `<Suspense>` for async boundaries
+- Use `<Activity>` for tab/sidebar navigation to preserve state
+- Use `<Skeleton>` for placeholders
+- Use `useActionState` for Server Action form submissions
+
+## i18n
+
+- Every rendered string must use keys from `src/lib/i18n/locales/en.json` + `pt-BR.json`
+- Add new keys to `en.json` first, then `pt-BR.json`
+- Navigation via `@/lib/i18n/navigation` only
+- `useTranslations()` in Client Components, `getTranslations()` in Server Components
+- After key changes run `bun run locale-check` and `bun run locale-unused`
+
+## TypeScript
+
+- Prefer `interface` for props and object shapes; `type` for unions/intersections
+- No `any`, `enum`, `@ts-ignore`, or `forwardRef`
+- Avoid unsafe casts; use type guards
+- Hooks return objects (never primitives)
+
+## Testing
+
+- Vitest + React Testing Library + `@testing-library/user-event`
+- Co-locate tests with source files (`*.test.ts(x)`)
+- Cover components, hooks, server actions, utilities
+- No `it.skip` or `it.todo` in committed code
+- Mock only external services (DB, Stripe, Resend)
 
 ## Code Conventions
 
@@ -195,96 +240,84 @@ bun run format
 
 ### Commits (Conventional Commits)
 
-```bash
-# Allowed types
-feat, fix, refactor, perf, docs, test, ci, chore, build, style, revert
-
-# Rules
-- Max header length: 88 characters
-- Format: <type>(<scope>): <description>
-- Scope is optional
 ```
+feat(auth): add Google OAuth sign-in
+fix(stripe): handle webhook signature failure
+chore(deps): update Prisma to 7.x
+```
+
+- Allowed types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `ci`, `chore`, `build`, `style`, `revert`
+- Max header length: 88 characters
 
 ## Prisma
 
-### Schema & Migrations
-
 ```bash
-bun run db:generate                 # Generate Prisma client
-bun run db:migrate                  # Apply migrations
-bun run db:studio                   # Open Prisma Studio
+bun run db:generate    # Generate Prisma client
+bun run db:migrate     # Apply migrations
+bun run db:studio      # Open Prisma Studio
 ```
 
-### Database Access
-
-- Use Prisma client from `src/database/prisma-connection.ts` when available
-- Keep models in `prisma/schema.prisma` and migrations in `prisma/migrations/`
+- Use Prisma client from `src/database/prisma-connection.ts`
+- Never modify files in `prisma/generated/`
 
 ## Better Auth
 
 ```bash
-bun run better-auth:generate         # Generate Better Auth types/config
+bun run better-auth:generate    # Generate Better Auth types/config
 ```
 
-## i18n
+## i18n Scripts
 
 ```bash
-bun run locale-check               # Validate translation files
-bun run locale-unused               # Check unused i18n keys
+bun run locale-check      # Validate key parity between en.json and pt-BR.json
+bun run locale-unused     # Detect orphan keys in translation files
 ```
+
+Both must pass in CI.
 
 ## Prohibited Practices
 
-### ❌ DO NOT
-
-1. Use `console.log` in production code
-2. Modify generated files in `prisma/generated/`
-3. Use `process.env` directly in app code (use `src/env.ts`)
-4. Use npm/yarn/pnpm (always use Bun)
-5. Use default exports (always use named exports)
-6. Create barrel files (`index.ts`) for internal folders
-7. Touch external services from UI components (use Server Actions)
-8. Use React.FC or any type
+| ❌ Do Not | ✅ Instead |
+|---|---|
+| `console.log` in production | Use proper logging or remove |
+| `process.env.X` in app code | Import `env` from `@/env` |
+| Default exports | Named exports always |
+| Barrel files (`index.ts`) | Direct imports only |
+| `React.FC` | Plain function components |
+| `any` type | `unknown`, generics, or proper type |
+| `forwardRef` | `ref` as a regular prop (React 19) |
+| TypeScript `enum` | `const` object + derived `type` |
+| `<img>` tag | `<Image />` from `next/image` |
+| Hardcoded UI strings | Translation keys from locale files |
+| Modify `prisma/generated/` | Hand off to Prisma CLI |
+| Feature cross-imports | Lift to `src/hooks/` or `src/utils/` |
+| `next/link` or `next/navigation` directly | `@/lib/i18n/navigation` |
+| `npm` / `yarn` / `pnpm` | `bun` |
 
 ## Useful Commands
 
-### Development
-
 ```bash
-bun install                         # Install dependencies
-bun run dev                         # Run Next.js dev server
-bun run start                       # Start production server
-```
+# Development
+bun install                    # Install dependencies
+bun run dev                    # Run Next.js dev server
+bun run start                  # Start production server
+bun run build                  # Build the app
 
-### Build & Quality
+# Quality
+bun run lint                   # Biome lint
+bun run lint:fix               # Lint with auto-fix
+bun run format                 # Biome format
+bun run ci                     # CI lint (strict)
 
-```bash
-bun run build                       # Build the app
-bun run lint                        # Biome lint
-bun run lint:fix                    # Lint with auto-fix
-bun run format                      # Biome format
-bun run ci                          # CI lint (Biome)
-```
+# Tests
+bun run test                   # Run tests
+bun run test:coverage          # Run tests with coverage
 
-### Tests
+# Docker & Deployment
+docker compose up -d           # Start database, Prisma Studio, Stripe webhook
+docker compose down            # Stop all services
+bun run build && docker build -t next-starter .
 
-```bash
-bun run test                        # Run tests
-bun run test:coverage               # Run tests with coverage
-```
-
-### Docker & Deployment
-
-```bash
-# Local infrastructure (Docker Compose)
-docker compose up -d                # Start database, Prisma Studio, Stripe webhook
-docker compose down                 # Stop all services
-
-# Production Docker build
-bun run build                       # Build Next.js standalone output
-docker build -t next-starter .      # Build Docker image
-
-# Run Docker container (change localhost to host.docker.internal)
 docker run --name next-starter \
   --env-file .env \
   -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/next-starter \
@@ -292,22 +325,23 @@ docker run --name next-starter \
   next-starter
 ```
 
-## CI/CD
+## CI/CD Pipeline Checks
 
-### Pipeline Checks
-
-- **Install**: `bun install`
-- **Prisma Generate**: `bun run db:generate`
-- **Typecheck**: `bun tsc`
-- **Lint**: `bun biome ci .`
-- **i18n Audit**: `bun locale-check`, `bun locale-unused`
-- **Tests**: `bun run test`
-- **Build**: `npm run build`
-- **SonarCloud**: Code quality and security analysis
+| Step | Command |
+|---|---|
+| Install | `bun install` |
+| Prisma Generate | `bun run db:generate` |
+| Typecheck | `bun tsc` |
+| Lint | `bun biome ci .` |
+| i18n Audit | `bun run locale-check && bun run locale-unused` |
+| Tests | `bun run test` |
+| Build | `bun run build` |
+| SonarCloud | Code quality and security analysis |
 
 ### Docker Compose Services
 
-- **database**: PostgreSQL (port 5432)
-- **prisma-studio**: Prisma Studio UI (port 5555)
-- **stripe-webhook**: Stripe CLI webhook forwarder
-
+| Service | Description | Port |
+|---|---|---|
+| `database` | PostgreSQL | 5432 |
+| `prisma-studio` | Prisma Studio UI | 5555 |
+| `stripe-webhook` | Stripe CLI webhook forwarder | — |

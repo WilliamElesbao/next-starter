@@ -1,7 +1,7 @@
 "use client";
 
 import type { Subscription } from "@better-auth/stripe";
-import type { Plan } from "@/actions/plans.actions";
+import type { Plan } from "@/actions/plans.action";
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { ChoosePlanDialog } from "@/components/choose-plan-dialog";
