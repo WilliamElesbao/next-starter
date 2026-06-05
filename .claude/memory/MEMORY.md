@@ -24,14 +24,14 @@
 | Path | Purpose |
 |---|---|
 | `src/features/` | Self-contained feature modules |
-| `src/components/ui/` | shadcn/ui primitives — do not modify |
-| `src/components/` | Shared complex components |
-| `src/actions/` | Next.js Server Actions (`*.actions.ts`) |
+| `src/components/ui/` | shadcn/ui primitives — add new primitives here |
+| `src/components/` | Shared complex components (built from primitives) |
+| `src/actions/` | Next.js Server Actions (`*.action.ts`) |
 | `src/hooks/` | Cross-feature shared hooks |
 | `src/lib/` | Third-party client configuration |
 | `src/middleware/` | Middleware modules (auth, cookies, i18n) |
 | `src/constants/` | App-wide constants |
-| `src/contexts/` | React Contexts |
+| `src/contexts/` | Global React Contexts (shared across 2+ features) — feature-scoped contexts live in `src/features/{feature}/contexts/` |
 | `src/providers/` | React Providers |
 | `src/utils/` | Pure utility functions |
 | `src/env.ts` | Type-safe env variables (single source of truth) |
@@ -58,4 +58,7 @@
 - Server Actions for all mutations
 - `safePromise` for all async DB / external calls
 - Zod v4 for all schema validation (use `{ error: "..." }` for messages)
-- `staleTime` on all `useQuery` calls
+- `staleTime` on all `useQuery` and `useInfiniteQuery` calls
+- `useInfiniteQuery` for large lists, tables, and history views
+- Hooks always return an object `{ ... }`, never a primitive
+- Every rendered string must use translation keys from locale files

@@ -68,11 +68,10 @@ export function Button({ className, variant, size, disabled, children, ...props 
 | `focus-visible` ring on interactive elements | Required |
 | `aria-label` on icon-only buttons | Required |
 | `{...props}` spread at end | Required |
-| `asChild` prop for polymorphic rendering | When applicable (via `Slot.Root`) |
+| `asChild` prop via `Slot.Root` from `radix-ui` | When polymorphic rendering is needed |
 | No `React.FC` | Forbidden |
 | No hardcoded colors | Forbidden — use theme variables |
-| forwardRef | Forbidden |
-| ref prop (React 19) | Required |
+| No `forwardRef` (React 19) | Use `ref` as a regular prop |
 
 ## Radix UI Primitives
 
@@ -82,41 +81,10 @@ import * as Tabs from "@radix-ui/react-tabs"
 import * as Select from "@radix-ui/react-select"
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu"
 
-// Dialog
-<Dialog.Root>
-  <Dialog.Portal>
-    <Dialog.Overlay />
-    <Dialog.Content />
-  </Dialog.Portal>
-</Dialog.Root>
-
-// Tabs
-<Tabs.Root>
-  <Tabs.List>
-    <Tabs.Trigger />
-  </Tabs.List>
-  <Tabs.Content />
-</Tabs.Root>
-
-// Select
-<Select.Root>
-  <Select.Trigger />
-  <Select.Portal>
-    <Select.Content>
-      <Select.Item />
-    </Select.Content>
-  </Select.Portal>
-</Select.Root>
-
-// Dropdown Menu
-<DropdownMenu.Root>
-  <DropdownMenu.Trigger />
-  <DropdownMenu.Portal>
-    <DropdownMenu.Content>
-      <DropdownMenu.Item />
-    </DropdownMenu.Content>
-  </DropdownMenu.Portal>
-</DropdownMenu.Root>
+<Dialog.Root><Dialog.Portal><Dialog.Overlay /><Dialog.Content /></Dialog.Portal></Dialog.Root>
+<Tabs.Root><Tabs.List><Tabs.Trigger /></Tabs.List><Tabs.Content /></Tabs.Root>
+<Select.Root><Select.Trigger /><Select.Portal><Select.Content><Select.Item /></Select.Content></Select.Portal></Select.Root>
+<DropdownMenu.Root><DropdownMenu.Trigger /><DropdownMenu.Portal><DropdownMenu.Content><DropdownMenu.Item /></DropdownMenu.Content></DropdownMenu.Portal></DropdownMenu.Root>
 ```
 
 ## Icon Guidelines

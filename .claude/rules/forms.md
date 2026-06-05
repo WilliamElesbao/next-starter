@@ -47,10 +47,7 @@ export const useSignInFormSchema = () => {
 export type SignInFormValues = z.infer<ReturnType<typeof useSignInFormSchema>>
 ```
 
-**Zod v4 notes:**
-- Custom error messages use `{ error: "..." }` (not `{ message: "..." }` as in v3)
-- `z.string().email()` → `z.email()`
-- Use factory functions with `useTranslations` for localized messages
+**Zod v4:** custom errors use `{ error: "..." }` (not `{ message: "..." }`). `z.string().email()` is now `z.email()`. Use factory functions with `useTranslations` for localized messages.
 
 ## Form Hook
 
@@ -110,33 +107,11 @@ function AuthFormField<T extends FieldValues>({ form, name, label, type }: AuthF
 
 The `form.tsx` also exports `<FormField />` (wraps `<Controller />`) for simpler use cases.
 
-## Compound Form Components
-
-Feature-specific forms use the compound component pattern (see `compound-components.md`):
-
-```tsx
-function SignInForm(props: React.ComponentProps<"div">) {
-  const { form, onSubmit } = useSignInForm()
-
-  return (
-    <AuthForm {...props}>
-      <AuthForm.Form form={form} onSubmit={onSubmit}>
-        <AuthForm.Header mode="sign-in" />
-        <AuthForm.Field form={form} name="email" label="Email" type="email" />
-        <AuthForm.Field form={form} name="password" label="Password" type="password" />
-        <AuthForm.Submit>Sign In</AuthForm.Submit>
-        <AuthForm.Separator />
-        <AuthForm.Socials />
-      </AuthForm.Form>
-      <AuthForm.Description />
-    </AuthForm>
-  )
-}
-```
+Feature-specific forms use the compound component pattern — see `compound-components.md` for the full example.
 
 ## Form Submission Loading
 
-Use `useActionState` (see `loading-states.md`) for Server Action form states, or `useFormStatus` for child components to read the parent `<form>` status:
+Use `useFormStatus` to read the parent `<form>` pending state. Use `useActionState` for Server Action states (see `loading-states.md`):
 
 ```tsx
 "use client"

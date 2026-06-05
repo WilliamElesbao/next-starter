@@ -104,5 +104,5 @@ Closes #<issue-number>
 | TypeScript error | Fix the type — never use `as` or `any` to suppress |
 | Failing test | Fix the implementation — never weaken the test |
 | Missing env var | Declare in `src/env.ts` and `.env.example` |
-| `<img>` instead of `<Image />` | Replace with `next/image` (see `rules/performance.md`) |
+| `<img>` instead of `<Image />` | Replace with `next/image` (see `rules/components.md`) |
 | Hardcoded string | Move to locale files and use `useTranslations()` |

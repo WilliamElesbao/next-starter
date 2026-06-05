@@ -24,18 +24,20 @@ When invoked, apply all project rules systematically using the checklist below.
 
 | Area | Rule file |
 |---|---|
-| Architecture | `rules/architecture.md` |
-| Components | `rules/components.md` |
-| Primitive Components | `rules/primitive-components.md` |
-| Compound Components | `rules/compound-components.md` |
-| Loading States | `rules/loading-states.md` |
-| Forms | `rules/forms.md` |
-| Data Fetching | `rules/data-fetching.md` |
-| Server Actions | `rules/server-actions.md` |
-| Testing | `rules/testing.md` |
-| i18n | `rules/i18n.md` |
-| TypeScript | `rules/typescript.md` |
-| Comments | `memory/feedback_fewer_comments.md` |
+| Architecture | `.claude/rules/architecture.md` |
+| Contexts | `.claude/rules/contexts.md` |
+| Components | `.claude/rules/components.md` |
+| Primitive Components | `.claude/rules/primitive-components.md` |
+| Compound Components | `.claude/rules/compound-components.md` |
+| Loading States | `.claude/rules/loading-states.md` |
+| Forms | `.claude/rules/forms.md` |
+| Data Fetching | `.claude/rules/data-fetching.md` |
+| Server Actions | `.claude/rules/server-actions.md` |
+| Testing | `.claude/rules/testing.md` |
+| i18n | `.claude/rules/i18n.md` |
+| TypeScript | `.claude/rules/typescript.md` |
+| Security | `.claude/skills/security-review/SKILL.md` |
+| Comments | `.claude/memory/feedback_fewer_comments.md` |
 
 ## Output Format
 
@@ -43,7 +45,7 @@ When invoked, apply all project rules systematically using the checklist below.
 ## Code Review — {PR title or description}
 
 ### [blocking] {Short title}
-**File:** `src/actions/subscription.actions.ts:34`
+**File:** `src/actions/subscription.action.ts:34`
 **Issue:** `cancelSubscription` does not verify the session user owns the subscription before deleting.
 **Fix:** Add ownership check after session validation. See `rules/server-actions.md`.
 
@@ -71,7 +73,7 @@ When invoked, apply all project rules systematically using the checklist below.
 
 ## Quick-Reference Checklist (for each file)
 
-- [ ] File is in the correct directory per architecture.md
+- [ ] File is in the correct directory per `rules/architecture.md`
 - [ ] No cross-feature imports
 - [ ] No `any` types; no excessive `as` assertions
 - [ ] Server Action: `'use server'` + Zod validation + auth check + `safePromise`
@@ -79,9 +81,12 @@ When invoked, apply all project rules systematically using the checklist below.
 - [ ] `<Image />` used — no `<img>`
 - [ ] No hardcoded strings — `useTranslations()` / `getTranslations()`
 - [ ] Unit test present alongside new component or hook
-- [ ] `staleTime` set on all `useQuery` calls
+- [ ] `staleTime` set on all `useQuery` and `useInfiniteQuery` calls
+- [ ] `useInfiniteQuery` for lists, tables, and history views
 - [ ] `cn()` used for conditional class merging
 - [ ] No comments explaining WHAT code does
 - [ ] `env` from `src/env.ts` — no `process.env` in app code
 - [ ] `'use client'` boundary pushed as low as possible
 - [ ] Zod v4: `{ error: "..." }` for custom messages
+- [ ] Hooks return an object `{ ... }` — never a primitive
+- [ ] `<Controller />` wraps all form inputs

@@ -45,7 +45,7 @@ Reference `skills/security-review.md` for the full vulnerability checklist.
 ## Security Audit Report — {description}
 
 ### CRITICAL: IDOR in deleteSubscription
-**File:** `src/actions/subscription.actions.ts:45`
+**File:** `src/actions/subscription.action.ts:45`
 **Issue:** Deletes a subscription by ID without verifying the authenticated user owns it.
 A user could delete any subscription by guessing the UUID.
 **Fix:**
@@ -58,7 +58,7 @@ if (subscription.userId !== session.user.id) {
 ---
 
 ### HIGH: Raw DB error exposed to client
-**File:** `src/actions/plans.actions.ts:67`
+**File:** `src/actions/plans.action.ts:67`
 **Issue:** `return { error: err.message }` — leaks internal DB error to the client.
 **Fix:** Return a generic message; log the real error server-side.
 

@@ -45,11 +45,7 @@ import { Activity } from "react"
 </Activity>
 ```
 
-When hidden:
-- State (`useState`) is preserved
-- Effects (`useEffect`) are unmounted
-- Background priority rendering continues
-- Restored instantly when visible
+When hidden: state preserved, effects unmounted, background rendering continues, restored instantly.
 
 **Use for:** Tabs, dashboards, sidebars, chats, internal page navigation.
 
@@ -102,32 +98,25 @@ function SubscriptionList() {
 }
 ```
 
-## `use` Hook — Read Promise/Context in Suspense
-
-React 19 `use` reads a Promise (suspending until resolved) or Context value inside a `<Suspense>` boundary:
+## `use` Hook — Streaming from Server to Client
 
 ```tsx
-import { use } from "react"
-
 function Comments({ promise }: { promise: Promise<Comment[]> }) {
-  const comments = use(promise)
+  const comments = use(promise)   // suspends until resolved
   return <ul>{comments.map(c => <li key={c.id}>{c.text}</li>)}</ul>
 }
 
-// Parent suspends automatically via <Suspense>
 <Suspense fallback={<Skeleton className="h-32 w-full" />}>
   <Comments promise={fetchComments(postId)} />
 </Suspense>
 ```
-
-Use for streaming data from Server Components to Client Components.
 
 ## Server Action Loading (useActionState)
 
 ```tsx
 "use client"
 import { useActionState } from "react"
-import { cancelSubscription } from "@/actions/subscription.actions"
+import { cancelSubscription } from "@/actions/subscription.action"
 
 function CancelForm({ id }: { id: string }) {
   const [state, formAction, isPending] = useActionState(
@@ -153,6 +142,6 @@ function CancelForm({ id }: { id: string }) {
 | Use `<Suspense>` for async boundaries | Required |
 | Use `<Activity>` for tab/sidebar navigation | Required |
 | Use `<Skeleton>` for loading placeholders | Preferred |
-| Set `staleTime` on all `useQuery` | Required |
-| Handle `isLoading` + `isError` states in queries | Required |
-| Use `useActionState` for Server Action submissions | Preferred |
+| `staleTime` on all `useQuery` + `useInfiniteQuery` | Required |
+| Handle `isLoading` + `isError` in TanStack Query | Required |
+| `useActionState` for Server Action form submissions | Preferred |

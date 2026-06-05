@@ -29,38 +29,40 @@ Next Starter is a full-stack Next.js 16 template with React 19, designed for Saa
 
 ```
 src/
-├── actions/              # Server Actions (only layer touching external services from UI)
+├── actions/              # Server Actions — only layer touching external services from UI
 ├── app/                  # Next.js App Router
-│   └── [locale]/        # i18n-aware routes
-├── components/          # UI components
-│   ├── ui/             # shadcn/ui primitives (Radix UI based)
-│   └── origin-ui/      # App-specific composition components
-├── constants/           # Shared constants
-├── context/            # React contexts
-├── database/           # Prisma connection helpers
-├── env.ts              # Centralized environment validation with Zod
-├── feature/            # Feature modules (isolated UI, hooks, actions)
-│   ├── auth/          # Authentication feature
-│   └── dashboard/     # Dashboard feature
-├── hooks/              # Custom React hooks
-├── lib/                # Platform integrations
-│   ├── better-auth/   # Better Auth configuration
-│   ├── dayjs/         # Date utilities
-│   ├── i18n/          # Internationalization
-│   ├── react-query/   # TanStack Query setup
-│   ├── resend/        # Email service
-│   ├── shadcn/        # shadcn/ui utilities
-│   └── stripe/        # Stripe client
-├── middleware/         # Next.js middleware (auth, i18n, cookies)
-├── providers/          # React providers
-├── scripts/            # Maintenance scripts (i18n validation)
-├── styles/             # Global styles
-└── utils/              # Shared utilities
+│   ├── [locale]/         # i18n-aware routes
+│   └── api/              # API routes (Better Auth, webhooks)
+├── components/           # Shared components
+│   └── ui/               # shadcn/ui primitives (Radix UI based)
+├── constants/            # Shared constants
+├── contexts/             # React contexts
+├── database/             # Prisma connection helper
+├── dev/                  # Devtools (development only)
+├── env.ts                # Centralized environment validation with Zod
+├── features/             # Feature modules (isolated UI, hooks, actions)
+│   ├── auth/
+│   └── dashboard/
+├── hooks/                # Cross-feature shared hooks
+├── lib/                  # Platform integrations
+│   ├── better-auth/
+│   ├── dayjs/
+│   ├── i18n/
+│   ├── react-query/
+│   ├── resend/
+│   ├── shadcn/
+│   └── stripe/
+├── middleware/           # Next.js middleware (auth, i18n, cookies)
+├── providers/            # React providers
+├── scripts/              # Maintenance scripts (i18n validation)
+├── stores/               # Global state stores (jotai, zustand, etc.)
+├── styles/               # Global styles
+└── utils/                # Shared utilities
 
-prisma/                # Prisma schema, migrations, and generated types
-emails/                 # React Email templates and assets
-docs/                   # Setup and infrastructure documentation
-public/                 # Static assets
+prisma/                   # Prisma schema, migrations, and generated types
+react-email/emails/       # React Email templates
+docs/                     # Setup and infrastructure documentation
+public/                   # Static assets
 ```
 
 ## Architectural Pattern
@@ -70,13 +72,38 @@ public/                 # Static assets
 This project follows a modular "platform + features" pattern:
 
 - **Platform code** lives in `src/lib`, `src/providers`, `src/middleware`, `src/database`, and `src/utils` — shared infrastructure
-- **Feature code** lives in `src/feature/*` with isolated UI, hooks, and actions — self-contained modules
-- **UI components** are split into:
-  - `src/components/ui/`: shadcn/ui primitives (Radix UI components with custom styling)
-  - `src/components/origin-ui/`: App-specific composition components built from UI primitives
-  - `src/feature/*/components/`: Feature-specific components
-- **Server actions** live in `src/actions/` and should be the only layer touching external services from the UI
+- **Feature code** lives in `src/features/*` with isolated UI, hooks, and actions — self-contained modules
+- **UI components**:
+  - `src/components/ui/`: shadcn/ui primitives (Radix UI components)
+  - `src/components/`: App-specific composition components
+  - `src/features/*/components/`: Feature-specific components
+- **Server Actions** in `src/actions/` are the only layer that touches external services from the UI
 - **Environment validation** is centralized in `src/env.ts` using Zod
+
+### Feature Module Structure
+
+```
+src/features/auth/
+├── components/
+├── hooks/
+├── sign-in/
+│   ├── hooks/
+│   │   ├── form-schema.ts
+│   │   └── use-sign-in-form.ts
+│   ├── sign-in-form.tsx
+│   └── sign-in-page.tsx
+└── sign-up/
+```
+
+### Isolation Rules
+
+| Allowed | Forbidden |
+|---|---|
+| Feature A uses global contexts (Auth, Theme) | Feature A imports from Feature B |
+| Feature A uses `src/components/` | Feature A uses Feature B's hooks |
+| Feature A uses `src/hooks/` | Cross-feature context access |
+
+Shared logic must be lifted to `src/hooks/` or `src/utils/`.
 
 ## Component Development Patterns
 
@@ -86,11 +113,11 @@ This project follows a modular "platform + features" pattern:
 - Always use named exports, never default exports
 - No barrel files (`index.ts`) for internal folders
 
-### Component Structure
+### Primitive Component Structure
 
 ```tsx
-import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
+import type { ComponentProps } from "react"
 import { cn } from "@/lib/shadcn/utils"
 
 const buttonVariants = cva(
@@ -113,67 +140,91 @@ const buttonVariants = cva(
   }
 )
 
-function Button({
-  className,
-  variant,
-  size,
-  ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>) {
+export interface ButtonProps
+  extends ComponentProps<"button">,
+    VariantProps<typeof buttonVariants> {}
+
+export function Button({ className, variant, size, ...props }: ButtonProps) {
   return (
     <button
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={cn(buttonVariants({ variant, size }), className)}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />
   )
 }
-
-export { Button, buttonVariants }
 ```
 
 ### Styling Patterns
 
-- Always use `cn()` for class merging (from `@/lib/shadcn/utils`)
-- Always use `data-slot` for component identification
-- Use data-attributes for states: `data-disabled={disabled ? "" : undefined}`
-- Focus visible for interactive elements: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
-- Icon sizing: `<Check className="size-4" />` or `[&_svg]:size-3.5` in variants
-- aria-label for icon buttons: `<button aria-label="Close"><X className="size-4" /></button>`
+- `cn()` from `@/lib/shadcn/utils` for all class merging
+- `data-slot` on every component for identification
+- `data-variant` / `data-size` when using cva variants
+- Data attributes for states: `data-disabled={disabled ? "" : undefined}`
+- Focus visible: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- Icon sizing: `<Check className="size-4" />` or `[&_svg:not([class*='size-'])]:size-4` in variants
+- `aria-label` on icon-only buttons
 - Props spread at the end: `{...props}`
 
-### Radix UI Usage
+### Forms (React Hook Form + Zod v4)
 
-This project uses Radix UI components (not @base-ui/react):
-
-```tsx
-import * as Dialog from "@radix-ui/react-dialog"
-<Dialog.Root><Dialog.Portal><Dialog.Overlay /><Dialog.Content /></Dialog.Portal></Dialog.Root>
-
-import * as Tabs from "@radix-ui/react-tabs"
-<Tabs.Root><Tabs.List><Tabs.Trigger /></Tabs.List><Tabs.Content /></Tabs.Root>
-
-import * as Select from "@radix-ui/react-select"
-<Select.Root><Select.Trigger /><Select.Portal><Select.Content><Select.Item /></Select.Content></Select.Portal></Select.Root>
+```ts
+// form-schema.ts — factory function for localized errors
+export const useSignInFormSchema = () => {
+  const t = useTranslations("validation")
+  return z.object({
+    email: z.email({ error: t("email.please-enter-a-valid-email") }),
+    password: z.string().min(1, { error: t("password.password-is-required") }),
+  })
+}
+export type SignInFormValues = z.infer<ReturnType<typeof useSignInFormSchema>>
 ```
 
-### TypeScript Patterns
+Always wrap form inputs with `<Controller />` from react-hook-form:
 
 ```tsx
-// ✅ Extend ComponentProps + VariantProps
-interface ButtonProps
-  extends React.ComponentProps<"button">,
-    VariantProps<typeof buttonVariants> {}
-
-// ✅ Import types from React
-import * as React from "react"
-import type { ComponentProps } from "react"
-
-// ❌ Do NOT use React.FC
-// ❌ Do NOT use any
+<Controller
+  control={form.control}
+  name="email"
+  render={({ field, fieldState }) => (
+    <Field data-invalid={fieldState.invalid}>
+      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+      <Input {...field} id={field.name} aria-invalid={fieldState.invalid} />
+      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+    </Field>
+  )}
+/>
 ```
+
+**Zod v4:** custom errors use `{ error: "..." }` (not `{ message: "..." }`). `z.string().email()` is now `z.email()`.
+
+### Hooks Convention
+
+Hooks always return an object — never a primitive:
+
+```ts
+// ✅
+export function useDialog() {
+  const [open, setOpen] = useState(false)
+  return { open, setOpen }
+}
+```
+
+### Data Fetching
+
+- `useQuery` / `useInfiniteQuery` for reads — always set `staleTime`
+- `useInfiniteQuery` for large lists, tables, and history views
+- `useMutation` for writes — invalidate queries on success
+- Server Actions for all mutations to external services
+
+### i18n
+
+- Every rendered string must use translation keys from `src/lib/i18n/locales/en.json` and `pt-BR.json`
+- New keys: add to `en.json` first, then `pt-BR.json`
+- Navigation via `@/lib/i18n/navigation` — never `next/link` or `next/navigation` directly
+- `useTranslations()` in Client Components; `getTranslations()` in Server Components
 
 ## Code Conventions
 
@@ -195,96 +246,84 @@ bun run format
 
 ### Commits (Conventional Commits)
 
-```bash
-# Allowed types
-feat, fix, refactor, perf, docs, test, ci, chore, build, style, revert
-
-# Rules
-- Max header length: 88 characters
-- Format: <type>(<scope>): <description>
-- Scope is optional
 ```
+feat(auth): add Google OAuth sign-in
+fix(stripe): handle webhook signature failure
+chore(deps): update Prisma to 7.x
+```
+
+- Allowed types: `feat`, `fix`, `refactor`, `perf`, `docs`, `test`, `ci`, `chore`, `build`, `style`, `revert`
+- Max header length: 88 characters
 
 ## Prisma
 
-### Schema & Migrations
-
 ```bash
-bun run db:generate                 # Generate Prisma client
-bun run db:migrate                  # Apply migrations
-bun run db:studio                   # Open Prisma Studio
+bun run db:generate    # Generate Prisma client
+bun run db:migrate     # Apply migrations
+bun run db:studio      # Open Prisma Studio
 ```
 
-### Database Access
-
-- Use Prisma client from `src/database/prisma-connection.ts` when available
-- Keep models in `prisma/schema.prisma` and migrations in `prisma/migrations/`
+- Use Prisma client from `src/database/prisma-connection.ts`
+- Never modify files in `prisma/generated/`
 
 ## Better Auth
 
 ```bash
-bun run better-auth:generate         # Generate Better Auth types/config
+bun run better-auth:generate    # Generate Better Auth types/config
 ```
 
-## i18n
+## i18n Scripts
 
 ```bash
-bun run locale-check               # Validate translation files
-bun run locale-unused               # Check unused i18n keys
+bun run locale-check      # Validate key parity between en.json and pt-BR.json
+bun run locale-unused     # Detect orphan keys in translation files
 ```
+
+Both must pass in CI.
 
 ## Prohibited Practices
 
-### ❌ DO NOT
-
-1. Use `console.log` in production code
-2. Modify generated files in `prisma/generated/`
-3. Use `process.env` directly in app code (use `src/env.ts`)
-4. Use npm/yarn/pnpm (always use Bun)
-5. Use default exports (always use named exports)
-6. Create barrel files (`index.ts`) for internal folders
-7. Touch external services from UI components (use Server Actions)
-8. Use React.FC or any type
+| ❌ Do Not | ✅ Instead |
+|---|---|
+| `console.log` in production | Use proper logging or remove |
+| `process.env.X` in app code | Import `env` from `@/env` |
+| Default exports | Named exports always |
+| Barrel files (`index.ts`) | Direct imports only |
+| `React.FC` | Plain function components |
+| `any` type | `unknown`, generics, or proper type |
+| `forwardRef` | `ref` as a regular prop (React 19) |
+| TypeScript `enum` | `const` object + derived `type` |
+| `<img>` tag | `<Image />` from `next/image` |
+| Hardcoded UI strings | Translation keys from locale files |
+| Modify `prisma/generated/` | Hand off to Prisma CLI |
+| Feature cross-imports | Lift to `src/hooks/` or `src/utils/` |
+| `next/link` or `next/navigation` directly | `@/lib/i18n/navigation` |
+| `npm` / `yarn` / `pnpm` | `bun` |
 
 ## Useful Commands
 
-### Development
-
 ```bash
-bun install                         # Install dependencies
-bun run dev                         # Run Next.js dev server
-bun run start                       # Start production server
-```
+# Development
+bun install                    # Install dependencies
+bun run dev                    # Run Next.js dev server
+bun run start                  # Start production server
+bun run build                  # Build the app
 
-### Build & Quality
+# Quality
+bun run lint                   # Biome lint
+bun run lint:fix               # Lint with auto-fix
+bun run format                 # Biome format
+bun run ci                     # CI lint (strict)
 
-```bash
-bun run build                       # Build the app
-bun run lint                        # Biome lint
-bun run lint:fix                    # Lint with auto-fix
-bun run format                      # Biome format
-bun run ci                          # CI lint (Biome)
-```
+# Tests
+bun run test                   # Run tests
+bun run test:coverage          # Run tests with coverage
 
-### Tests
+# Docker & Deployment
+docker compose up -d           # Start database, Prisma Studio, Stripe webhook
+docker compose down            # Stop all services
+bun run build && docker build -t next-starter .
 
-```bash
-bun run test                        # Run tests
-bun run test:coverage               # Run tests with coverage
-```
-
-### Docker & Deployment
-
-```bash
-# Local infrastructure (Docker Compose)
-docker compose up -d                # Start database, Prisma Studio, Stripe webhook
-docker compose down                 # Stop all services
-
-# Production Docker build
-bun run build                       # Build Next.js standalone output
-docker build -t next-starter .      # Build Docker image
-
-# Run Docker container (change localhost to host.docker.internal)
 docker run --name next-starter \
   --env-file .env \
   -e DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5432/next-starter \
@@ -292,22 +331,23 @@ docker run --name next-starter \
   next-starter
 ```
 
-## CI/CD
+## CI/CD Pipeline Checks
 
-### Pipeline Checks
-
-- **Install**: `bun install`
-- **Prisma Generate**: `bun run db:generate`
-- **Typecheck**: `bun tsc`
-- **Lint**: `bun biome ci .`
-- **i18n Audit**: `bun locale-check`, `bun locale-unused`
-- **Tests**: `bun run test`
-- **Build**: `npm run build`
-- **SonarCloud**: Code quality and security analysis
+| Step | Command |
+|---|---|
+| Install | `bun install` |
+| Prisma Generate | `bun run db:generate` |
+| Typecheck | `bun tsc` |
+| Lint | `bun biome ci .` |
+| i18n Audit | `bun run locale-check && bun run locale-unused` |
+| Tests | `bun run test` |
+| Build | `bun run build` |
+| SonarCloud | Code quality and security analysis |
 
 ### Docker Compose Services
 
-- **database**: PostgreSQL (port 5432)
-- **prisma-studio**: Prisma Studio UI (port 5555)
-- **stripe-webhook**: Stripe CLI webhook forwarder
-
+| Service | Description | Port |
+|---|---|---|
+| `database` | PostgreSQL | 5432 |
+| `prisma-studio` | Prisma Studio UI | 5555 |
+| `stripe-webhook` | Stripe CLI webhook forwarder | — |

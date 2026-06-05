@@ -68,11 +68,10 @@ function ToggleButton() {
 ## Server Component Data Flow
 
 ```tsx
-// ✅ Pass data as props from Server to Client
-// Server Component (parent)
+// Server Component (parent) — passes serializable data down
 async function Page() {
   const user = await getUser()
-  return <UserProfile user={user} />  // passes serializable data down
+  return <UserProfile user={user} />
 }
 
 // Client Component (child)
@@ -126,18 +125,21 @@ function ItemList({ items }: Props) {
 
 ## Color System
 
-CSS variables defined in `src/styles/globals.css`:
+CSS variables defined in `src/styles/globals.css`. **Never hardcode colors** — use theme variables.
 
-| Role | Variable |
+| Role | Tailwind Class |
 |---|---|
-| Background | `bg-background`, `bg-card`, `bg-popover`, `bg-muted` |
-| Text | `text-foreground`, `text-card-foreground`, `text-muted-foreground` |
-| Borders | `border-border`, `border-input` |
+| Page background | `bg-background` / `text-foreground` |
+| Card surface | `bg-card` / `text-card-foreground` |
+| Popover surface | `bg-popover` / `text-popover-foreground` |
+| Subtle background | `bg-muted` / `text-muted-foreground` |
+| Accent highlight | `bg-accent` / `text-accent-foreground` |
+| Primary action | `bg-primary` / `text-primary-foreground` |
+| Secondary action | `bg-secondary` / `text-secondary-foreground` |
+| Destructive action | `bg-destructive` / `text-destructive` |
+| Borders | `border-border` / `border-input` |
 | Focus ring | `ring-ring` |
-| Primary action | `bg-primary`, `text-primary-foreground` |
-| Destructive | `bg-destructive`, `text-destructive-foreground` |
-
-**Never hardcode colors** — always use theme variables.
+| Sidebar | `bg-sidebar` / `text-sidebar-foreground` |
 
 ## `<Image />` Usage
 

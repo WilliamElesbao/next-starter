@@ -44,8 +44,8 @@ src/components/ui/
 └── button.test.tsx              ✅ co-located
 
 src/actions/
-├── send-welcome-email.actions.ts
-└── send-welcome-email.actions.test.ts   ✅ co-located
+├── send-welcome-email.action.ts
+└── send-welcome-email.action.test.ts   ✅ co-located
 
 src/features/auth/sign-in/hooks/
 ├── use-sign-in-form.ts
@@ -114,7 +114,7 @@ describe("useSignInForm", () => {
 
 ```ts
 import { describe, expect, it, vi } from "vitest"
-import { sendWelcomeEmail } from "./send-welcome-email.actions"
+import { sendWelcomeEmail } from "./send-welcome-email.action"
 
 vi.mock("@/lib/resend/resend-client", () => ({
   resend: { emails: { send: vi.fn().mockResolvedValue({ id: "email-1" }) } },

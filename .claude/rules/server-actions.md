@@ -104,7 +104,7 @@ export async function cancelSubscription(
 'use client';
 import { useTransition } from 'react';
 import { toast } from 'sonner';
-import { cancelSubscription } from '@/actions/subscription.actions';
+import { cancelSubscription } from '@/actions/subscription.action';
 
 function CancelButton({ subscriptionId }: { subscriptionId: string }) {
   const [isPending, startTransition] = useTransition();
@@ -130,7 +130,7 @@ function CancelButton({ subscriptionId }: { subscriptionId: string }) {
 ```ts
 // src/hooks/stripe/use-subscription-form.ts
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { cancelSubscription } from '@/actions/subscription.actions';
+import { cancelSubscription } from '@/actions/subscription.action';
 
 export function useCancelSubscription() {
   const queryClient = useQueryClient();

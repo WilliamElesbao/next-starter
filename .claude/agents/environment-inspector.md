@@ -76,7 +76,7 @@ git ls-files | grep "\.env"
 ---
 
 ### ❌ Variable used but not declared in env.ts
-`RESEND_FROM_EMAIL` is referenced in `src/actions/send-welcome-email.actions.ts`
+`RESEND_FROM_EMAIL` is referenced in `src/actions/send-welcome-email.action.ts`
 but is not declared in `src/env.ts`.
 **Fix:** Add to `src/env.ts` and `.env.example`.
 
