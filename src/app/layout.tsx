@@ -14,6 +14,9 @@ export const metadata: Metadata = {
   title: "Next Starter",
   description:
     "An open-source starter kit built for developers who want to accelerate product development with best practices.",
+  icons: {
+    icon: "/nextjs.png",
+  },
 };
 
 export default function RootLayout({
