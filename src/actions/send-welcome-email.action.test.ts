@@ -1,6 +1,6 @@
 import type { Mock } from "vitest";
 import { resend } from "@/lib/resend/resend-client";
-import { sendWelcomeEmailAction } from "./send-welcome-email.actions";
+import { sendWelcomeEmailAction } from "./send-welcome-email.action";
 
 vi.mock("@/lib/resend/resend-client", () => ({
   resend: {

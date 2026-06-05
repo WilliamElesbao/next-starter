@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { stripePlans } from "@/actions/plans.actions";
-import { activeSubscription } from "@/actions/subscription.actions";
+import { stripePlans } from "@/actions/plans.action";
+import { activeSubscription } from "@/actions/subscription.action";
 import { DashboardPage } from "@/features/dashboard/dashboard";
 import { auth } from "@/lib/better-auth/auth";
 
