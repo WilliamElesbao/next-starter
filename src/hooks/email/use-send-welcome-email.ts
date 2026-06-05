@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
-import { sendWelcomeEmailAction } from "@/actions/send-welcome-email.actions";
+import { sendWelcomeEmailAction } from "@/actions/send-welcome-email.action";
 
 /**
  * Hook for sending welcome emails with toast notifications.

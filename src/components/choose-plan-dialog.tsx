@@ -2,7 +2,7 @@
 
 import type { Subscription } from "@better-auth/stripe";
 import { CheckIcon, RefreshCcwIcon } from "lucide-react";
-import type { Plan } from "@/actions/plans.actions";
+import type { Plan } from "@/actions/plans.action";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
