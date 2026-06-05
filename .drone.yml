@@ -72,7 +72,6 @@ steps:
       - sonar-scanner
     depends_on:
       - tests
-      - build
 
   - name: build
     image: node:24
