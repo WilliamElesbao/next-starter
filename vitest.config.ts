@@ -13,7 +13,7 @@ export default defineConfig({
     environment: "node",
     setupFiles: ["./vitest.setup.ts"],
     coverage: {
-      thresholds:{
+      thresholds: {
         lines: 80,
         functions: 80,
         branches: 80,
