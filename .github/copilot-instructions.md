@@ -36,7 +36,7 @@ src/
 ├── components/           # Shared components
 │   └── ui/               # shadcn/ui primitives (Radix UI based)
 ├── constants/            # Shared constants
-├── contexts/             # React contexts
+├── contexts/             # Shared contexts
 ├── database/             # Prisma connection helper
 ├── dev/                  # Devtools (development only)
 ├── env.ts                # Centralized environment validation with Zod
@@ -45,37 +45,27 @@ src/
 │   └── dashboard/
 ├── hooks/                # Cross-feature shared hooks
 ├── lib/                  # Platform integrations
-│   ├── better-auth/
-│   ├── dayjs/
-│   ├── i18n/
-│   ├── react-query/
-│   ├── resend/
-│   ├── shadcn/
-│   └── stripe/
 ├── middleware/           # Next.js middleware (auth, i18n, cookies)
 ├── providers/            # React providers
 ├── scripts/              # Maintenance scripts (i18n validation)
-├── stores/               # Global state stores (jotai, zustand, etc.)
 ├── styles/               # Global styles
-└── utils/                # Shared utilities
+├── utils/                # Shared utilities
+├── stores/               # Global state stores
+└── env.ts                # Environment validation (single source of truth)
 
-prisma/                   # Prisma schema, migrations, and generated types
+prisma/                   # Prisma schema, migrations, generated types
 react-email/emails/       # React Email templates
 docs/                     # Setup and infrastructure documentation
 public/                   # Static assets
 ```
 
-## Architectural Pattern
-
-### Platform vs Features
-
-This project follows a modular "platform + features" pattern:
+## Architecture & Isolation
 
 - **Platform code** lives in `src/lib`, `src/providers`, `src/middleware`, `src/database`, and `src/utils` — shared infrastructure
 - **Feature code** lives in `src/features/*` with isolated UI, hooks, and actions — self-contained modules
 - **UI components**:
-  - `src/components/ui/`: shadcn/ui primitives (Radix UI components)
-  - `src/components/`: App-specific composition components
+  - `src/components/ui/`: shadcn/ui primitives (Radix UI components, custom components)
+  - `src/components/`: App-specific compound components
   - `src/features/*/components/`: Feature-specific components
 - **Server Actions** in `src/actions/` are the only layer that touches external services from the UI
 - **Environment validation** is centralized in `src/env.ts` using Zod
@@ -99,46 +89,44 @@ src/features/auth/
 
 | Allowed | Forbidden |
 |---|---|
-| Feature A uses global contexts (Auth, Theme) | Feature A imports from Feature B |
+| Feature A uses global contexts (`src/contexts/`) | Feature A imports from Feature B |
 | Feature A uses `src/components/` | Feature A uses Feature B's hooks |
-| Feature A uses `src/hooks/` | Cross-feature context access |
+| Feature A uses `src/hooks/` | Feature A reads Feature B contexts |
 
 Shared logic must be lifted to `src/hooks/` or `src/utils/`.
 
-## Component Development Patterns
+## Components
 
 ### File Naming
 
-- Files: lowercase with hyphens → `user-card.tsx`, `use-modal.ts`
-- Always use named exports, never default exports
+- Files: lowercase with hyphens → `user-card.tsx`
+- Exports: named only (no default exports)
 - No barrel files (`index.ts`) for internal folders
 
-### Primitive Component Structure
+### Primitive Components (`src/components/ui/`)
+
+- Use `cva()` for variants and `twMerge()` for class merging
+- Always include `data-slot`
+- Use `data-variant` / `data-size` for variants
+- Use state data attributes (`data-disabled`, `data-open`, etc.) instead of conditional classes
+- Always include focus-visible rings: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
+- Icon-only buttons require `aria-label`
+- Spread `{...props}` at the end
+- Never hardcode colors — use theme tokens (`bg-background`, `text-foreground`, etc.)
+- Never use `<img>` — use `next/image`
 
 ```tsx
 import { cva, type VariantProps } from "class-variance-authority"
 import type { ComponentProps } from "react"
 import { cn } from "@/lib/shadcn/utils"
 
-const buttonVariants = cva(
-  "base-classes",
-  {
-    variants: {
-      variant: {
-        default: "variant-classes",
-        secondary: "variant-classes",
-      },
-      size: {
-        default: "size-classes",
-        sm: "size-classes",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-)
+const buttonVariants = cva("base-classes", {
+  variants: {
+    variant: { default: "...", secondary: "..." },
+    size: { default: "...", sm: "..." },
+  },
+  defaultVariants: { variant: "default", size: "default" },
+})
 
 export interface ButtonProps
   extends ComponentProps<"button">,
@@ -157,74 +145,80 @@ export function Button({ className, variant, size, ...props }: ButtonProps) {
 }
 ```
 
-### Styling Patterns
+### Compound Components
 
-- `cn()` from `@/lib/shadcn/utils` for all class merging
-- `data-slot` on every component for identification
-- `data-variant` / `data-size` when using cva variants
-- Data attributes for states: `data-disabled={disabled ? "" : undefined}`
-- Focus visible: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`
-- Icon sizing: `<Check className="size-4" />` or `[&_svg:not([class*='size-'])]:size-4` in variants
-- `aria-label` on icon-only buttons
-- Props spread at the end: `{...props}`
+- Use separate files per sub-component (kebab-case)
+- Assemble with `Object.assign(Root, { Sub: SubComponent, ... })`
 
-### Forms (React Hook Form + Zod v4)
+### Server vs Client Components
 
-```ts
-// form-schema.ts — factory function for localized errors
-export const useSignInFormSchema = () => {
-  const t = useTranslations("validation")
-  return z.object({
-    email: z.email({ error: t("email.please-enter-a-valid-email") }),
-    password: z.string().min(1, { error: t("password.password-is-required") }),
-  })
-}
-export type SignInFormValues = z.infer<ReturnType<typeof useSignInFormSchema>>
-```
+- Default to Server Components
+- Add `'use client'` only when state/effects, browser APIs, or TanStack Query hooks are required
+- Pass serializable props from Server → Client components
 
-Always wrap form inputs with `<Controller />` from react-hook-form:
+## Contexts & Providers
 
-```tsx
-<Controller
-  control={form.control}
-  name="email"
-  render={({ field, fieldState }) => (
-    <Field data-invalid={fieldState.invalid}>
-      <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-      <Input {...field} id={field.name} aria-invalid={fieldState.invalid} />
-      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-    </Field>
-  )}
-/>
-```
+- Global contexts live in `src/contexts/`
+- Feature contexts live in `src/features/{feature}/contexts/`
+- Never import a feature context across features; promote to global if shared
+- Context files export exactly: interface, Provider, consumer hook
+- `createContext<Type | undefined>` and throw in hook when missing provider
+- Wrap context values in `useMemo`
 
-**Zod v4:** custom errors use `{ error: "..." }` (not `{ message: "..." }`). `z.string().email()` is now `z.email()`.
+## Forms (RHF + Zod v4)
 
-### Hooks Convention
+- Zod schema is a factory using `useTranslations("validation")`
+- Use `z.email()` and `{ error: "..." }` for custom errors
+- Always wrap inputs with `<Controller />`
+- Feature forms follow compound component pattern
 
-Hooks always return an object — never a primitive:
+## Data Fetching
 
-```ts
-// ✅
-export function useDialog() {
-  const [open, setOpen] = useState(false)
-  return { open, setOpen }
-}
-```
+- Prefer Server Components for read-only data
+- Use Server Actions for all mutations
+- Use `useQuery` / `useInfiniteQuery` with `staleTime`
+- Use `enabled` guard for optional params
+- Use `useInfiniteQuery` for lists, tables, history views
+- Use `safePromise` for DB/external calls in Server Actions
 
-### Data Fetching
+## Server Actions
 
-- `useQuery` / `useInfiniteQuery` for reads — always set `staleTime`
-- `useInfiniteQuery` for large lists, tables, and history views
-- `useMutation` for writes — invalidate queries on success
-- Server Actions for all mutations to external services
+- `'use server'` must be the first line
+- Validate inputs with Zod and derive types via `z.infer`
+- Auth check before any mutation
+- Verify ownership before DB writes
+- Return `{ success, data } | { success, error }`
+- Never return raw DB/Stripe errors
 
-### i18n
+## Loading States
 
-- Every rendered string must use translation keys from `src/lib/i18n/locales/en.json` and `pt-BR.json`
-- New keys: add to `en.json` first, then `pt-BR.json`
-- Navigation via `@/lib/i18n/navigation` — never `next/link` or `next/navigation` directly
-- `useTranslations()` in Client Components; `getTranslations()` in Server Components
+- Use `<Suspense>` for async boundaries
+- Use `<Activity>` for tab/sidebar navigation to preserve state
+- Use `<Skeleton>` for placeholders
+- Use `useActionState` for Server Action form submissions
+
+## i18n
+
+- Every rendered string must use keys from `src/lib/i18n/locales/en.json` + `pt-BR.json`
+- Add new keys to `en.json` first, then `pt-BR.json`
+- Navigation via `@/lib/i18n/navigation` only
+- `useTranslations()` in Client Components, `getTranslations()` in Server Components
+- After key changes run `bun run locale-check` and `bun run locale-unused`
+
+## TypeScript
+
+- Prefer `interface` for props and object shapes; `type` for unions/intersections
+- No `any`, `enum`, `@ts-ignore`, or `forwardRef`
+- Avoid unsafe casts; use type guards
+- Hooks return objects (never primitives)
+
+## Testing
+
+- Vitest + React Testing Library + `@testing-library/user-event`
+- Co-locate tests with source files (`*.test.ts(x)`)
+- Cover components, hooks, server actions, utilities
+- No `it.skip` or `it.todo` in committed code
+- Mock only external services (DB, Stripe, Resend)
 
 ## Code Conventions
 
