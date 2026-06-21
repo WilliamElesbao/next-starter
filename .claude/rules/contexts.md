@@ -6,6 +6,8 @@ paths:
 
 # Contexts & Providers
 
+Scope context as tightly as its consumers demand. Keep it inside the feature until a second feature genuinely needs it, then promote it to `src/contexts/` — never import one feature's context into another. Every context fails fast when read outside its provider.
+
 ## Scoping Rules
 
 | Context type | Location | When to use |

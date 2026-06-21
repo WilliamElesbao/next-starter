@@ -8,22 +8,53 @@ paths:
 
 # Data Fetching
 
+Fetch on the server by default and pass serializable data down as props. Reach for TanStack Query on the client only when the UI has to read, poll, or paginate after hydration — and when you do, always set `staleTime` and handle every loading and error branch.
+
+## Reads vs Writes
+
+Separate them by mechanism — never fetch reads through a Server Action:
+
+| Operation | Mechanism | Lives in |
+|---|---|---|
+| Read in a Server Component | Plain async data-access function (cached) | `src/data/*` |
+| Read from a Client Component | Route Handler + `useQuery` | `src/app/api/*` + hook |
+| Write / mutation | Server Action | `src/actions/*` |
+
+> **Why not a Server Action for reads?** Server Actions are POST endpoints that run sequentially and can't be cached or deduplicated. Use them only for mutations; keep reads in the data layer where they can be wrapped in `cache()` / `unstable_cache`.
+
 ## Strategy Overview
 
 | Approach | Direction | Use Case |
 |---|---|---|
-| Server Component async | Server → Client (props) | Initial data, read-only, SEO |
-| Server Actions | Client → Server (mutation) | Forms, mutations, external services |
-| `useQuery` | Client | Client-side reads, polling, caching |
+| Server Component + data layer | Server → Client (props) | Initial data, read-only, SEO |
+| Server Actions | Client → Server (mutation) | Forms, mutations, external writes |
+| `useQuery` + Route Handler | Client | Client-side reads, polling, caching |
 | `useInfiniteQuery` | Client | Load more / infinite scroll |
 | `useMutation` | Client → Server | Server Actions with cache invalidation |
 
 ## Server Component Data Fetching
 
+Call the data layer directly and parallelize independent reads after the auth check:
+
 ```tsx
-async function SubscriptionList() {
-  const subscriptions = await db.subscription.findMany()
-  return <ul>{subscriptions.map(s => <li key={s.id}>{s.status}</li>)}</ul>
+// src/data/subscription.ts — cached, server-only read
+export const getActiveSubscription = cache(async () => {
+  const subs = await auth.api.listActiveSubscriptions({ headers: await headers() })
+  return subs[0]
+})
+
+// Server Component
+async function Page() {
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect("/sign-in")
+
+  // ✅ parallel, not a waterfall
+  const [plans, subscription] = await Promise.all([
+    getStripePlans(),
+    getActiveSubscription(),
+  ])
+
+  return <Dashboard plans={plans} subscription={subscription} />
 }
 ```
 

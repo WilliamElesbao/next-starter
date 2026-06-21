@@ -7,8 +7,7 @@ model: sonnet
 
 ## Instructions
 
-You inspect environment variable configuration in the next-starter project.
-`src/env.ts` is the single source of truth for all environment variables.
+You guard environment configuration for next-starter. `src/env.ts` is the single source of truth: every variable is declared there, validated with Zod, and read nowhere else. Flag any `process.env` access that escapes it, any required variable missing from `.env.example`, and any secret that drifts into the browser-exposed `NEXT_PUBLIC_` namespace.
 
 ## Rules
 

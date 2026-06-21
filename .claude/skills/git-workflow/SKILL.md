@@ -5,6 +5,8 @@ description: Branch naming, commit messages, and PR process for this project
 
 # Git Workflow
 
+Keep history clean and every change traceable: branch by type, commit in the imperative, gate the merge on green CI, and squash to a single readable commit on the way into `main`.
+
 ## Branch Naming
 
 ```
@@ -63,12 +65,13 @@ ci(github): add SonarCloud quality gate step
 
 ```bash
 bun run lint            # Biome — lint + format check
-bun run type-check      # TypeScript strict check
+bun tsc                 # TypeScript strict check
 bun run test            # Vitest — all tests
-bun run check:i18n      # Validate i18n key parity
+bun run locale-check    # Validate i18n key parity
+bun run locale-unused   # Detect orphan i18n keys
 ```
 
-All checks must pass before pushing.
+All checks must pass before pushing — CI runs the same gates and will block the merge otherwise.
 
 ## Common Commands
 

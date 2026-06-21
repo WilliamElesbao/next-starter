@@ -26,7 +26,9 @@
 | `src/features/` | Self-contained feature modules |
 | `src/components/ui/` | shadcn/ui primitives — add new primitives here |
 | `src/components/` | Shared complex components (built from primitives) |
-| `src/actions/` | Next.js Server Actions (`*.action.ts`) |
+| `src/actions/` | Next.js Server Actions — mutations only (`*.action.ts`) |
+| `src/data/` | Server-side data-access layer — reads for Server Components (cached) |
+| `src/app/api/` | Route Handlers (Better Auth, client-side reads) |
 | `src/hooks/` | Cross-feature shared hooks |
 | `src/lib/` | Third-party client configuration |
 | `src/middleware/` | Middleware modules (auth, cookies, i18n) |

@@ -7,6 +7,8 @@ paths:
 
 # Loading States
 
+Pick the right primitive for the job: `<Suspense>` streams async boundaries, `<Activity>` hides a subtree without destroying its state, `<Skeleton>` fills the visual gap, and `useActionState` tracks Server Action submissions. Match the tool to the goal — don't reach for state when the platform already solves it.
+
 ## Decision Table
 
 | Goal | Tool | When |

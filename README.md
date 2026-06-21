@@ -1,15 +1,15 @@
 # Next Starter
 
-Next Starter is a full-stack Next.js 16 template focused on a clean, scalable
-foundation for SaaS-style products with authentication, billing, email, and
-local infrastructure baked in.
+Ship SaaS products on a clean, scalable Next.js 16 foundation — authentication,
+billing, transactional email, and local infrastructure wired up from day one.
 
 ## Project Overview
 
-This repository is a single Next.js app with server actions, Prisma-backed
-PostgreSQL, Better Auth, Stripe billing, and React Email templates.
-It is designed to keep platform concerns centralized while features live in
-their own isolated modules.
+Next Starter is a single Next.js application that pairs Server Actions, a
+Prisma-backed PostgreSQL database, Better Auth, Stripe billing, and React Email
+templates. The architecture centralizes platform concerns and isolates every
+feature in its own self-contained module, so the codebase scales without turning
+into a tangle of cross-dependencies.
 
 | ![sign-in page](docs/sign-in.png) | ![dashboard-welcome toast](docs/dashboard-welcome.png) | ![dashboard page](docs/dashboard.png) |
 |---|---|---|
@@ -41,7 +41,8 @@ their own isolated modules.
 
 ## Architecture
 
-This project follows a modular **platform + features** pattern:
+Next Starter follows a modular **platform + features** pattern — shared
+infrastructure stays central, product code stays isolated:
 
 - **Platform** — `src/lib`, `src/providers`, `src/middleware`, `src/database`, `src/utils`: shared infrastructure
 - **Features** — `src/features/*`: isolated, self-contained modules (UI, hooks, actions)
@@ -168,8 +169,8 @@ See `docs/docker/deployment.md` for full deployment documentation.
 
 | Pipeline | Steps |
 |---|---|
-| **Drone CI** | install → db:generate → typecheck → lint → i18n audit → test → build |
-| **GitHub Actions** | SonarCloud scan (`sonar.yml`), Biome annotations (`pr-review.yml`) |
+| **Drone CI** (`.drone.yml`) | install → db:generate → typecheck → lint → i18n audit → test → sonarcloud → build |
+| **GitHub Actions** (`.github/workflows/ci.yml`) | prisma-generate → typecheck · lint · i18n-audit → tests → SonarCloud → build |
 | **SonarCloud** | Code quality and security analysis (`sonar-project.properties`) |
 
 ## Documentation

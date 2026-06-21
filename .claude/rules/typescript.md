@@ -6,6 +6,8 @@ paths:
 
 # TypeScript
 
+Make illegal states unrepresentable. Derive types from Zod schemas instead of hand-writing them, narrow with type guards instead of casting, and never reach for `any` to silence the compiler — the type that's hard to express is usually the bug.
+
 ## Configuration
 
 | Setting | Value |

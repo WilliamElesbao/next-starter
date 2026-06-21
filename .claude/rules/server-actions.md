@@ -7,6 +7,8 @@ paths:
 
 # Server Actions
 
+Server Actions handle **mutations** — the layer through which the UI writes to external services. (Reads belong in the data layer; see `data-fetching.md`.) Treat every action as a trust boundary: validate the input, authenticate the caller, verify ownership, then mutate — and never leak a raw DB, Stripe, or Resend error back to the client.
+
 ## File Structure
 
 ```

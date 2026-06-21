@@ -5,18 +5,21 @@ paths:
 
 # Architecture
 
+Organize every file by ownership: shared infrastructure lives in the platform layer, product code lives in self-contained features. Features never reach into each other — lift shared logic up to `src/hooks/` or `src/utils/`, never wire it sideways.
+
 ## Project Structure
 
 ```
 src/
-├── actions/            # Server Actions — only layer touching external services from UI
+├── actions/            # Server Actions — mutations only (writes via external services)
 ├── app/                # Next.js App Router
 │   ├── [locale]/       # i18n-aware routes
-│   └── api/            # API routes (Better Auth, webhooks)
+│   └── api/            # Route Handlers (Better Auth, client-side reads, webhooks)
 ├── components/         # Shared components used across the entire application
 │   └── ui/             # shadcn/ui primitives (Radix UI based)
 ├── constants/          # Shared constants
 ├── contexts/           # Shared contexts
+├── data/               # Server-side data-access layer — reads for Server Components
 ├── database/           # Prisma connection helper
 ├── features/           # Feature modules (isolated, self-contained)
 │   ├── auth/
@@ -89,7 +92,8 @@ See `.claude/rules/contexts.md` for the full pattern and rules.
 | Named exports | No default exports (except App Router page wrappers) |
 | No barrel files | No `index.ts` that only re-exports |
 | No `process.env` in app code | Use `src/env.ts` exclusively |
-| External services via Server Actions only | UI never touches Stripe, Resend, etc. directly |
+| Reads use the data layer | Server Components call `src/data/*`; client reads hit a Route Handler |
+| Mutations use Server Actions | `src/actions/*` is the only place the UI writes to external services |
 
 ## Hooks Convention
 

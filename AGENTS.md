@@ -1,6 +1,6 @@
 # Next Starter
 
-Next.js 16 starter with TypeScript, feature-based architecture, server-first approach, and modern tooling.
+A production-grade Next.js 16 starter: TypeScript end to end, a feature-based architecture, a server-first rendering model, and modern tooling. Build features as isolated modules, keep platform concerns central, and lean on the type system and linter to enforce the rules below.
 
 ## Tech Stack
 
@@ -26,14 +26,15 @@ Next.js 16 starter with TypeScript, feature-based architecture, server-first app
 
 ```
 src/
-├── actions/              # Server Actions (only external service callers)
+├── actions/              # Server Actions — mutations only (writes to external services)
 ├── app/                  # Next.js App Router
 │   ├── [locale]/         # i18n-aware routes
-│   └── api/auth/         # Better Auth API handler
+│   └── api/              # Route Handlers (Better Auth, client-side reads)
 ├── components/           # Shared components
 │   └── ui/               # shadcn/ui primitives (Radix UI)
 ├── constants/            # App-wide constants
 ├── contexts/             # Global contexts shared across features (feature-scoped contexts live in features/*/contexts/)
+├── data/                 # Server-side data-access layer — reads for Server Components
 ├── database/             # Prisma connection
 ├── env.ts                # Environment validation (single source of truth)
 ├── features/             # Self-contained feature modules
