@@ -7,6 +7,8 @@ paths:
 
 # Compound Components
 
+Reach for a compound component when a UI element has distinct, composable parts — a card with header, content, and footer; a form with typed fields. Split each part into its own file, then assemble them into one namespace with `Object.assign()` so callers compose intent, not markup.
+
 ## When to Use
 
 | Use compound components | Keep as single component |

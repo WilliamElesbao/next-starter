@@ -8,6 +8,8 @@ paths:
 
 # Forms
 
+Drive every form with React Hook Form and validate it with a Zod v4 schema bridged through `zodResolver`. Localize messages with `next-intl` — never hardcode copy inside a validator — and wrap every input with `<Controller />`.
+
 ## Stack
 
 | Tool | Purpose |

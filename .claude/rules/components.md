@@ -7,6 +7,8 @@ paths:
 
 # Components
 
+Default to Server Components. Reach for `'use client'` only when you need state, effects, or browser APIs — and push that boundary as low in the tree as it goes. Build from primitives up: `ui/` primitives, then shared compositions, then feature components.
+
 ## Organization
 
 | Directory | Content | Example |

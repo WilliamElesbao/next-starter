@@ -6,6 +6,8 @@ disable-model-invocation: true
 
 # Security Review
 
+Audit defensively. Every mutating Server Action authenticates the caller and verifies ownership before it touches data; every external boundary — Stripe webhooks, user input, env access — is validated before it's trusted. Work the checklist top to bottom and treat any unchecked box as a blocker, not a suggestion.
+
 ## Checklist
 
 ### Authentication & Authorization

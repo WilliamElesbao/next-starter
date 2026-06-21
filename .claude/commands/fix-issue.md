@@ -24,8 +24,8 @@ model: sonnet
 ### 2 — Reproduce
 
 ```bash
-bun dev                          # Start dev server
-bun prisma migrate dev           # Apply pending migrations (if DB change involved)
+bun run dev                      # Start dev server
+bun run db:migrate               # Apply pending migrations (if DB change involved)
 bun run test --reporter=verbose  # Confirm existing test failures (if any)
 ```
 
@@ -51,9 +51,9 @@ See `rules/testing.md` for test patterns.
 
 ```bash
 bun run test            # All tests must pass
-bun run type-check      # No TypeScript errors
+bun tsc                 # No TypeScript errors
 bun run lint            # Biome passes
-bun run check:i18n      # i18n keys in sync (if any locale change)
+bun run locale-check    # i18n keys in sync (if any locale change)
 ```
 
 ### 6 — Commit
@@ -100,7 +100,7 @@ Closes #<issue-number>
 |---|---|
 | Missing auth check | Add session check at top of Server Action (see `rules/server-actions.md`) |
 | IDOR / missing ownership check | Add ownership check after session validation |
-| Missing i18n key | Add to both `en.json` and `pt-BR.json`; run `bun run check:i18n` |
+| Missing i18n key | Add to both `en.json` and `pt-BR.json`; run `bun run locale-check` |
 | TypeScript error | Fix the type — never use `as` or `any` to suppress |
 | Failing test | Fix the implementation — never weaken the test |
 | Missing env var | Declare in `src/env.ts` and `.env.example` |

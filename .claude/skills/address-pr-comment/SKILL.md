@@ -63,6 +63,6 @@ git push origin feat/my-feature
 
 - [ ] All `[blocking]` comments addressed
 - [ ] `bun run lint` passes
-- [ ] `bun run type-check` passes
+- [ ] `bun tsc` passes
 - [ ] `bun run test` passes
 - [ ] All comment threads resolved or replied to

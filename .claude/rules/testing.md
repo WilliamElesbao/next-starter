@@ -8,6 +8,8 @@ paths:
 
 # Testing
 
+Write the test first, then the minimum code to pass it. Verify behavior through public interfaces — what the user observes — not implementation details, so the suite survives a refactor. Never weaken a test to make it pass: fix the implementation.
+
 ## Stack
 
 | Tool | Purpose |

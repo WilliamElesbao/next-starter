@@ -7,8 +7,7 @@ model: sonnet
 
 ## Instructions
 
-You validate internationalization in the next-starter project, which uses `next-intl`
-with two locale files: `en` (source of truth) and `pt-BR`.
+You enforce internationalization for next-starter. The app runs on `next-intl` with two locale files: `en.json` is the source of truth and `pt-BR.json` must mirror it key for key — zero missing keys, zero orphans, zero hardcoded strings in the UI.
 
 ## Locale Files
 
@@ -22,8 +21,8 @@ src/lib/i18n/locales/
 ## Validation Scripts
 
 ```bash
-bun run check:i18n              # Key parity check (validate-i18n.ts)
-bun run check:unused-i18n-keys  # Detect orphan keys
+bun run locale-check    # Key parity check (validate-i18n.ts)
+bun run locale-unused   # Detect orphan keys (check-unused-i18n-keys.ts)
 ```
 
 ## Validation Rules
@@ -39,8 +38,8 @@ bun run check:unused-i18n-keys  # Detect orphan keys
 ## Audit Process
 
 ```
-1. Run bun run check:i18n — capture output
-2. Run bun run check:unused-i18n-keys — capture output
+1. Run bun run locale-check — capture output
+2. Run bun run locale-unused — capture output
 3. Scan JSX/TSX for hardcoded English strings (heuristic, see commands below)
 4. Verify hook usage per component type
 5. Output report
@@ -50,10 +49,10 @@ bun run check:unused-i18n-keys  # Detect orphan keys
 
 ```bash
 # Parity check
-bun run check:i18n
+bun run locale-check
 
 # Unused keys
-bun run check:unused-i18n-keys
+bun run locale-unused
 
 # Heuristic: capitalized string literals in JSX (likely hardcoded)
 grep -rn '>[A-Z][a-z]' src/ --include="*.tsx" | grep -v "\.json"
@@ -103,6 +102,6 @@ Found: `<h2>Welcome back</h2>`
 ```
 1. Add key to en.json
 2. Add translated key to pt-BR.json
-3. Run `bun run check:i18n` — must pass
+3. Run `bun run locale-check` — must pass
 4. TypeScript type definitions update automatically from en.d.json.ts
 ```
