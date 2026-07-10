@@ -2,7 +2,9 @@ import { stripe } from "@better-auth/stripe";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
+import { revalidateTag } from "next/cache";
 import type Stripe from "stripe";
+import { cacheKeys } from "@/constants/cache/cache-key";
 import { db } from "@/database/prisma-connection";
 import { env } from "@/env";
 import { stripeClient } from "../stripe/stripe-client";
@@ -61,6 +63,9 @@ export const auth = betterAuth({
             name: product.name.toLowerCase(), // match your needs
             priceId: (product.default_price as Stripe.Price).id,
           }));
+        },
+        onSubscriptionComplete: async ({ subscription }) => {
+          revalidateTag(cacheKeys.userPlan(subscription.referenceId), "hours");
         },
       },
     }),
