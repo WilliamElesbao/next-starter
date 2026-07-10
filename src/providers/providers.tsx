@@ -5,9 +5,11 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import type { PropsWithChildren } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { queryClient } from "@/lib/react-query/query-client";
+import { getQueryClient } from "@/lib/react-query/query-client";
 
 export function Providers({ children }: Readonly<PropsWithChildren>) {
+  const client = getQueryClient();
+
   return (
     <NextThemesProvider
       attribute="class"
@@ -15,7 +17,7 @@ export function Providers({ children }: Readonly<PropsWithChildren>) {
       enableSystem
       disableTransitionOnChange
     >
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={client}>
         <TooltipProvider>
           {children}
           <Toaster richColors />
