@@ -32,10 +32,6 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
-    password: {
-      hash: (password) => Bun.password.hash(password),
-      verify: ({ password, hash }) => Bun.password.verify(password, hash),
-    },
   },
   socialProviders: {
     google: {
