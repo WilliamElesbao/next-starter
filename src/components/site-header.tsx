@@ -1,6 +1,6 @@
 import type { Subscription } from "@better-auth/stripe";
+import { IconBrandGithub } from "@tabler/icons-react";
 import Link from "next/link";
-import * as IconsSi from "rocketicons/si";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -32,7 +32,7 @@ export function SiteHeader({ subscription }: Readonly<SiteHeaderProps>) {
               target="_blank"
               className="dark:text-foreground"
             >
-              <IconsSi.SiGithub className="size-5" />
+              <IconBrandGithub className="size-5" />
             </Link>
           </Button>
 

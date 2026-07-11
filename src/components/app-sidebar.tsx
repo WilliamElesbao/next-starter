@@ -1,8 +1,8 @@
 "use client";
 
+import { IconRocket } from "@tabler/icons-react";
 import Link from "next/link";
 import type * as React from "react";
-import * as IconsGi from "rocketicons/gi";
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -35,7 +35,7 @@ export function AppSidebar({
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <Link href="#">
-                <IconsGi.GiFox className="!size-5 text-primary" />
+                <IconRocket className="size-5 text-primary" />
                 <span className="font-semibold text-base">
                   <span className="text-primary">Next </span>
                   Starter
