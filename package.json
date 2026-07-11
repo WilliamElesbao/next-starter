@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun --bun next dev",
+    "dev": "bun next dev",
     "build": "bun run db:generate && next build",
     "start": "next start",
     "test": "vitest run",
