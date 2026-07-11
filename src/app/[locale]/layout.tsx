@@ -8,7 +8,10 @@ interface Props {
   params: Promise<{ locale: string }>;
 }
 
-export default async function LocaleLayout({ children, params }: Props) {
+export default async function LocaleLayout({
+  children,
+  params,
+}: Readonly<Props>) {
   const { locale } = await params;
 
   if (!hasLocale(routing.locales, locale)) notFound();
