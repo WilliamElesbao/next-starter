@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { WELCOME_TOAST } from "@/constants/session-storage";
 import { env } from "@/env";
 import { authClient } from "@/lib/better-auth/auth-client";
+import { logger } from "@/utils/logger";
 import { type SignUpFormValues, useSignUpFormSchema } from "./form-schema";
 
 /**
@@ -35,7 +36,7 @@ export const useSignUpForm = () => {
       },
       {
         onSuccess: (context) => {
-          console.log("[useSignupForm] - Sign-up successful:", context.data);
+          logger.info("[useSignupForm] - Sign-up successful:", context.data);
           globalThis.location.replace("/");
         },
         onError: (context) => {
