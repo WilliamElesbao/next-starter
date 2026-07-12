@@ -8,6 +8,7 @@ import { cacheKeys } from "@/constants/cache/cache-key";
 import { db } from "@/database/prisma-connection";
 import { env } from "@/env";
 import { WELCOME_COOKIE } from "@/features/welcome-toast/constants/welcome-cookie";
+import { logger } from "@/utils/logger";
 import { stripeClient } from "../stripe/stripe-client";
 
 export const auth = betterAuth({
@@ -68,6 +69,24 @@ export const auth = betterAuth({
           }));
         },
         onSubscriptionComplete: async ({ subscription }) => {
+          logger.info(
+            "[Subscription Complete] Revalidating user plan cache for userId: " +
+              subscription.referenceId,
+          );
+          revalidateTag(cacheKeys.userPlan(subscription.referenceId), "hours");
+        },
+        onSubscriptionUpdate: async ({ subscription }) => {
+          logger.info(
+            "[Subscription Update] Revalidating user plan cache for userId: " +
+              subscription.referenceId,
+          );
+          revalidateTag(cacheKeys.userPlan(subscription.referenceId), "hours");
+        },
+        onSubscriptionCancel: async ({ subscription }) => {
+          logger.info(
+            "[Subscription Cancel] Revalidating user plan cache for userId: " +
+              subscription.referenceId,
+          );
           revalidateTag(cacheKeys.userPlan(subscription.referenceId), "hours");
         },
       },
