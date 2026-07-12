@@ -30,35 +30,13 @@
       "sign-up-failed": "Sign up failed"
     }
   },
-  "dashboard": {
-    "toast": {
-      "welcome": {
-        "title": "Hey D3v!",
-        "description": "Welcome to Next Starter, Wow, the authentication worked perfectly!"
-      },
-      "send-email": {
-        "failed-to-send-email": "Failed to send email. Please try again later.",
-        "email-sent-successfully": "Email sent successfully!"
-      },
-      "subscription": {
-        "redirecting-to-stripe-for-subscription": "Redirecting to Stripe for subscription...",
-        "please-wait-while-we-set-up-your-subscription": "Please wait while we set up your subscription.",
-        "failed-to-create-subscription": "Failed to create subscription.",
-        "an-error-occurred-while-creating-your-subscription": "An error occurred while creating your subscription. Please try again."
-      },
-      "update-subscription": {
-        "redirecting-to-stripe-for-subscription-update": "Redirecting to Stripe for subscription update...",
-        "please-wait-while-we-update-your-subscription": "Please wait while we update your subscription.",
-        "failed-to-update-subscription": "Failed to update subscription.",
-        "an-error-occurred-while-updating-your-subscription": "An error occurred while updating your subscription. Please try again."
-      },
-      "cancel-subscription": {
-        "redirecting-to-stripe-for-subscription-cancellation": "Redirecting to Stripe for subscription cancellation...",
-        "you-will-not-be-charged-for-the-next-billing-cycle": "You will not be charged for the next billing cycle\nBut you can still access your account until the end of the current period.",
-        "failed-to-cancel-subscription": "Failed to cancel subscription.",
-        "an-error-occurred-while-canceling-your-subscription": "An error occurred while canceling your subscription. Please try again."
-      }
-    }
+  "welcome-toast": {
+    "title": "Hey D3v!",
+    "description": "Welcome to Next Starter, Wow, the authentication worked perfectly!"
+  },
+  "send-email": {
+    "failed-to-send-email": "Failed to send email. Please try again later.",
+    "email-sent-successfully": "Email sent successfully!"
   },
   "subscription": {
     "plan": "Plan",
