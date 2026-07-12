@@ -24,6 +24,7 @@ export async function upgradeSubscriptionAction(
   const data = await auth.api.upgradeSubscription({
     body: {
       plan: formValues.planName,
+      customerType: "user",
       successUrl: `${env.NEXT_PUBLIC_BASE_URL}/subscription`,
       cancelUrl: `${env.NEXT_PUBLIC_BASE_URL}/subscription`,
       disableRedirect: false,
