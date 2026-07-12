@@ -10,7 +10,7 @@ const AUTH_ROUTES = new Set(["/sign-in", "/sign-up"]);
 const LANDING_ROUTE = "/";
 
 // Only these prefixes are protected — everything else falls through
-const PROTECTED_PREFIXES = ["/dashboard"];
+const PROTECTED_PREFIXES = ["/subscription"];
 
 function isAuthRoute(pathname: string): boolean {
   return AUTH_ROUTES.has(pathname);
