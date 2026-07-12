@@ -1,4 +1,25 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: next-starter-app
+    volumes:
+      - .:/workspace:delegated
+    command: sleep infinity
+    environment:
+      DATABASE_URL: postgresql://postgres_user:postgres_password@database:5432/next-starter
+      NODE_OPTIONS: --max-old-space-size=4096
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=2g
+    shm_size: 2gb
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   database:
     image: postgres:latest
     container_name: next-starter-database
@@ -25,8 +46,9 @@ services:
   stripe-webhook:
     image: stripe/stripe-cli:latest
     container_name: next-starter-stripe-webhook
-    command: listen --forward-to http://host.docker.internal:3000/api/auth/stripe/webhook
+    command: listen --forward-to http://app:3000/api/auth/stripe/webhook
     env_file:
       - .env.local
     depends_on:
+      - app
       - database
