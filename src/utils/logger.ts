@@ -6,6 +6,11 @@ export const logger = {
       console.error(...args);
     }
   },
+  log: (...args: ErrorMessages) => {
+    if (process.env.NODE_ENV === "development") {
+      console.log(...args);
+    }
+  },
   info: (...args: ErrorMessages) => {
     if (process.env.NODE_ENV === "development") {
       console.info(...args);
