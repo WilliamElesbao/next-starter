@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getCurrentSession } from "@/actions/get-session.action";
+import { cacheKeys } from "@/constants/cache/cache-key";
 import { db } from "@/database/prisma-connection";
 import { env } from "@/env";
 import { auth } from "@/lib/better-auth/auth";
@@ -75,7 +76,7 @@ export async function cancelSubscriptionAction(): Promise<ManageSubscriptionResu
     };
   }
 
-  revalidateTag(`user-plan:${user.id}`, "hours");
+  revalidateTag(cacheKeys.userPlan(user.id), "hours");
   refresh();
   return { success: true };
 }
@@ -113,7 +114,7 @@ export async function renewSubscriptionAction(): Promise<ManageSubscriptionResul
     };
   }
 
-  revalidateTag(`user-plan:${user.id}`, "hours");
+  revalidateTag(cacheKeys.userPlan(user.id), "hours");
   refresh();
   return { success: true };
 }
