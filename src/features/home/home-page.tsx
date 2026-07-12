@@ -37,8 +37,8 @@ export function HomePage() {
             asChild
           >
             <Link href="/subscription">
-              <IconBrandNextjs className="size-5" />
-              <Text tone="inverted">Get Started</Text>
+              <IconBrandNextjs className="size-5 text-white" />
+              <Text className="text-white">Get Started</Text>
             </Link>
           </Button>
         </div>
