@@ -18,6 +18,8 @@ export const env = createEnv({
     // Stripe
     STRIPE_API_KEY: z.string().startsWith("sk_"),
     STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_"),
+    // Whitelisted emails for testing purposes
+    WHITELISTED_EMAILS: z.string().default(""),
   },
   client: {
     NEXT_PUBLIC_BASE_URL: z.url(),
