@@ -4,6 +4,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { revalidateTag } from "next/cache";
 import type Stripe from "stripe";
+import { sendWelcomeEmailAction } from "@/actions/send-welcome-email.action";
 import { cacheKeys } from "@/constants/cache/cache-key";
 import { db } from "@/database/prisma-connection";
 import { env } from "@/env";
@@ -45,11 +46,12 @@ export const auth = betterAuth({
   },
   plugins: [
     stripe({
-      onCustomerCreate: async (_, ctx) => {
+      onCustomerCreate: async (data, ctx) => {
         ctx.setCookie(WELCOME_COOKIE.key, WELCOME_COOKIE.value, {
           maxAge: 60,
           path: "/",
         });
+        sendWelcomeEmailAction({ email: data.user.email });
       },
       stripeClient,
       stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,

@@ -8,10 +8,14 @@ import WelcomeEmail from "../../react-email/emails/welcome-email";
  * Sends a welcome email to a new user using the Resend email service.
  * @returns An object indicating the success status and any error message if applicable.
  */
-export async function sendWelcomeEmailAction() {
+export async function sendWelcomeEmailAction({
+  email,
+}: {
+  email: string;
+}): Promise<{ success: boolean; message?: string }> {
   const { error } = await resend.emails.send({
     from: env.EMAIL_FROM,
-    to: env.EMAIL_TO,
+    to: email,
     subject: "Welcome to Next Starter!",
     react: WelcomeEmail({
       name: "D3v",
