@@ -14,7 +14,7 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
       }
     >
       <ErrorBoundary>
-        <AppSidebar variant="inset" />
+        <AppSidebar variant="inset" collapsible="icon" />
       </ErrorBoundary>
       {children}
     </SidebarProvider>
