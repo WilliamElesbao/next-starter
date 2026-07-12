@@ -28,7 +28,7 @@ export async function SiteHeader() {
         <SidebarTrigger className="-ml-1" />
         <Separator
           orientation="vertical"
-          className="mx-2 data-[orientation=vertical]:h-4"
+          className="mr-2 my-auto data-[orientation=vertical]:h-4"
         />
         <h1 className="font-medium text-base">Subscription</h1>
         <div className="ml-auto flex items-center gap-2">
