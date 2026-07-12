@@ -1,8 +1,8 @@
 import { Suspense } from "react";
 import { Crossfade } from "@/components/crossfade";
-import { SiteHeader } from "@/components/site-header";
 import { SidebarInset } from "@/features/sidebar/components/sidebar";
 import { PlanSection } from "./components/plan-section";
+import { SiteHeader } from "./components/site-header";
 
 export function SubscriptionPage() {
   return (

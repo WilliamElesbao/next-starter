@@ -1,19 +1,18 @@
 import { IconBrandGithub } from "@tabler/icons-react";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { getCurrentSession } from "@/actions/get-session.action";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/features/sidebar/components/sidebar";
-import { LanguageSwitcher } from "./language-switcher";
-import { ThemeToggle } from "./theme-toggle";
-import { Badge } from "./ui/badge";
-import { getTranslations } from "next-intl/server";
-import { getCurrentSession } from "@/actions/get-session.action";
 import { getUserPlan } from "@/features/subscription/actions/get-user-plan.action";
+import { Link } from "@/lib/i18n/navigation";
 import { planStatusToLabelMap } from "@/utils/plan-status-to-label";
-
+import { LanguageSwitcher } from "../../../components/language-switcher";
+import { ThemeToggle } from "../../../components/theme-toggle";
+import { Badge } from "../../../components/ui/badge";
 
 export async function SiteHeader() {
-    const [t, { user }] = await Promise.all([
+  const [t, { user }] = await Promise.all([
     getTranslations("subscription"),
     getCurrentSession(),
   ]);
