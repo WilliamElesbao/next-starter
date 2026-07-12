@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { type PropsWithChildren, Suspense } from "react";
-import { Crossfade } from "@/components/crossfade";
 import { routing } from "@/lib/i18n/routing";
 
 interface Props extends PropsWithChildren {
@@ -24,9 +23,7 @@ async function LocaleLayoutInner({ children, params }: Readonly<Props>) {
 export default function LocaleLayout({ children, params }: Readonly<Props>) {
   return (
     <Suspense fallback={null}>
-      <Crossfade>
-        <LocaleLayoutInner params={params}>{children}</LocaleLayoutInner>
-      </Crossfade>
+      <LocaleLayoutInner params={params}>{children}</LocaleLayoutInner>
     </Suspense>
   );
 }
