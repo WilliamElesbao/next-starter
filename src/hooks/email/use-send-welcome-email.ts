@@ -14,7 +14,7 @@ import { sendWelcomeEmailAction } from "@/actions/send-welcome-email.action";
 export const useMailer = () => {
   const t = useTranslations("send-email");
 
-  const sendWelcomeMutation = useMutation({
+  const mutation = useMutation({
     mutationFn: ({ email }: { email: string }) =>
       sendWelcomeEmailAction({ email }),
     onSuccess: () => {
@@ -25,5 +25,5 @@ export const useMailer = () => {
     },
   });
 
-  return { sendWelcomeMutation };
+  return { ...mutation };
 };

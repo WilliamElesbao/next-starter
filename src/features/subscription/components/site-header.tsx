@@ -10,6 +10,7 @@ import { planStatusToLabelMap } from "@/utils/plan-status-to-label";
 import { LanguageSwitcher } from "../../../components/language-switcher";
 import { ThemeToggle } from "../../../components/theme-toggle";
 import { Badge } from "../../../components/ui/badge";
+import { SendEmailButton } from "./send-email-button";
 
 export async function SiteHeader() {
   const [t, { user }] = await Promise.all([
@@ -32,6 +33,7 @@ export async function SiteHeader() {
         <h1 className="font-medium text-base">Subscription</h1>
         <div className="ml-auto flex items-center gap-2">
           <Badge>{t(planLabel)}</Badge>
+          <SendEmailButton email={user.email} />
           <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
             <Link
               href="https://github.com/WilliamElesbao"
