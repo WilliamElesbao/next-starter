@@ -6,13 +6,13 @@
  */
 export const formatPrice = ({
   currency,
-  price,
+  amount,
 }: {
   currency: "usd" | "brl";
-  price: number | null | undefined;
+  amount: number | null | undefined;
 }): string => {
   return new Intl.NumberFormat(currency === "usd" ? "en-US" : "pt-BR", {
     style: "currency",
     currency: currency.toUpperCase(),
-  }).format((price ?? 0) / 100);
+  }).format((amount ?? 0) / 100);
 };
