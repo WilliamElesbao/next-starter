@@ -16,15 +16,6 @@ export const auth = betterAuth({
   database: prismaAdapter(db, {
     provider: "postgresql",
   }),
-  user: {
-    additionalFields: {
-      stripeSubscriptionId: {
-        type: "string",
-        required: false,
-        input: false,
-      },
-    },
-  },
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
     cookieCache: {
