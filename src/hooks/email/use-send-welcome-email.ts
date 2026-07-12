@@ -15,7 +15,8 @@ export const useMailer = () => {
   const t = useTranslations("send-email");
 
   const sendWelcomeMutation = useMutation({
-    mutationFn: () => sendWelcomeEmailAction(),
+    mutationFn: ({ email }: { email: string }) =>
+      sendWelcomeEmailAction({ email }),
     onSuccess: () => {
       toast.success(t("email-sent-successfully"));
     },
