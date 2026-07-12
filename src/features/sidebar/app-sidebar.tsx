@@ -30,7 +30,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:p-1.5!"
             >
-              <Link href="#">
+              <Link href="/">
                 <IconRocket className="size-5 text-primary" />
                 <span className="font-semibold text-base">
                   <span className="text-primary">Next</span> Starter
