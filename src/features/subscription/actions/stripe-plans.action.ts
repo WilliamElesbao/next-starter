@@ -2,12 +2,13 @@
 
 import { cacheLife, cacheTag } from "next/cache";
 import type Stripe from "stripe";
+import { cacheKeys } from "@/constants/cache/cache-key";
 import { stripeClient } from "@/lib/stripe/stripe-client";
 import { formatPrice } from "@/utils/format-price";
 
 export async function stripePlansAction() {
   "use cache";
-  cacheTag("stripe-plans");
+  cacheTag(cacheKeys.stripePlans());
   cacheLife("hours");
 
   const { data } = await stripeClient.products.list({
