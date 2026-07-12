@@ -7,6 +7,7 @@ import type Stripe from "stripe";
 import { cacheKeys } from "@/constants/cache/cache-key";
 import { db } from "@/database/prisma-connection";
 import { env } from "@/env";
+import { WELCOME_COOKIE } from "@/features/welcome-toast/constants/welcome-cookie";
 import { stripeClient } from "../stripe/stripe-client";
 
 export const auth = betterAuth({
@@ -43,6 +44,12 @@ export const auth = betterAuth({
   },
   plugins: [
     stripe({
+      onCustomerCreate: async (_, ctx) => {
+        ctx.setCookie(WELCOME_COOKIE.key, WELCOME_COOKIE.value, {
+          maxAge: 60,
+          path: "/",
+        });
+      },
       stripeClient,
       stripeWebhookSecret: env.STRIPE_WEBHOOK_SECRET,
       createCustomerOnSignUp: true,

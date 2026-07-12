@@ -1,4 +1,4 @@
-export const WELCOME_TOAST = {
+export const WELCOME_COOKIE = {
   key: "welcome",
   value: "true",
 } as const;
