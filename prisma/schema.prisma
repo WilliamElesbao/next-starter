@@ -98,38 +98,3 @@ model Subscription {
 
   @@map("subscription")
 }
-
-enum DocumentStatus {
-  DONE
-  IN_PROCESS
-}
-
-enum DocumentType {
-  COVER_PAGE
-  TABLE_OF_CONTENTS
-  NARRATIVE
-  TECHNICAL_CONTENT
-  PLAIN_LANGUAGE
-  LEGAL
-  VISUAL
-  FINANCIAL
-  RESEARCH
-  PLANNING
-}
-
-model DocumentSection {
-  id     String         @id
-  header String
-  type   DocumentType
-  status DocumentStatus
-
-  target Int
-  limit  Int
-
-  reviewer String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("document_sections")
-}

@@ -8,14 +8,15 @@ import { sendWelcomeEmailAction } from "@/actions/send-welcome-email.action";
  *
  * @returns Object containing the mutation for sending welcome emails.
  * @example
- * const { sendWelcomeMutation } = useMailer();
- * sendWelcomeMutation.mutate();
+ * const { mutate, isPending } = useMailer();
+ * mutate();
  */
 export const useMailer = () => {
-  const t = useTranslations("dashboard.toast.send-email");
+  const t = useTranslations("send-email");
 
-  const sendWelcomeMutation = useMutation({
-    mutationFn: () => sendWelcomeEmailAction(),
+  const mutation = useMutation({
+    mutationFn: ({ email }: { email: string }) =>
+      sendWelcomeEmailAction({ email }),
     onSuccess: () => {
       toast.success(t("email-sent-successfully"));
     },
@@ -24,5 +25,5 @@ export const useMailer = () => {
     },
   });
 
-  return { sendWelcomeMutation };
+  return { ...mutation };
 };

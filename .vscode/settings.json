@@ -1,6 +1,7 @@
 {
   "sonarlint.connectedMode.project": {
-    "connectionId": "next-starter",
-    "projectKey": "next-starter_next-starter"
-  }
+    "connectionId": "org-key-evo",
+    "projectKey": "project-key-next-starter"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

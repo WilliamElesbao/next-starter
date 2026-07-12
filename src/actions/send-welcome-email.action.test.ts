@@ -27,7 +27,7 @@ describe("sendWelcomeEmailAction", () => {
       error: null,
     });
 
-    const result = await sendWelcomeEmailAction();
+    const result = await sendWelcomeEmailAction({ email: "to@example.com" });
 
     expect(result).toEqual({
       success: true,
@@ -53,7 +53,7 @@ describe("sendWelcomeEmailAction", () => {
       error: mockError,
     });
 
-    const result = await sendWelcomeEmailAction();
+    const result = await sendWelcomeEmailAction({ email: "to@example.com" });
 
     expect(result).toEqual({
       success: false,

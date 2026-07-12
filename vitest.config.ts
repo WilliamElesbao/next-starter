@@ -19,7 +19,7 @@ export default defineConfig({
         branches: 80,
         statements: 80,
       },
-      provider: "istanbul",
+      provider: "v8",
       reporter: ["lcov", "text"],
       // Uncomment to include all source files in coverage calculations, even if they are not imported by tests.
       // include: ["src/**/*.ts", "src/**/*.tsx"],

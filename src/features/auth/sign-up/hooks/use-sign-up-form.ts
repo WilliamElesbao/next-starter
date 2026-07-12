@@ -2,9 +2,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { WELCOME_TOAST } from "@/constants/session-storage";
 import { env } from "@/env";
 import { authClient } from "@/lib/better-auth/auth-client";
+import { logger } from "@/utils/logger";
 import { type SignUpFormValues, useSignUpFormSchema } from "./form-schema";
 
 /**
@@ -26,16 +26,14 @@ export const useSignUpForm = () => {
   });
 
   const onSubmit = async (values: SignUpFormValues) => {
-    sessionStorage.setItem(WELCOME_TOAST.key, WELCOME_TOAST.value);
-
     await authClient.signUp.email(
       {
         ...values,
-        callbackURL: env.NEXT_PUBLIC_BASE_URL,
+        callbackURL: `${env.NEXT_PUBLIC_BASE_URL}/subscription`,
       },
       {
         onSuccess: (context) => {
-          console.log("[useSignupForm] - Sign-up successful:", context.data);
+          logger.info("[useSignupForm] - Sign-up successful:", context.data);
           globalThis.location.replace("/");
         },
         onError: (context) => {
