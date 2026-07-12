@@ -20,11 +20,11 @@
     "locale-check": "bun run src/scripts/validate-i18n.ts",
     "locale-unused": "bun run src/scripts/check-unused-i18n-keys.ts",
     "prepare": "husky",
-    "better-auth:generate": "bun --bun x @better-auth/cli generate --config src/lib/better-auth/auth.ts",
-    "db:generate": "bun --bun x prisma generate",
-    "db:migrate": "bun --bun x prisma migrate dev",
-    "db:seed": "bun --bun x prisma db seed",
-    "db:studio": "bun --bun x prisma studio"
+    "better-auth:generate": "bunx --bun @better-auth/cli generate --config src/lib/better-auth/auth.ts",
+    "db:generate": "bunx --bun prisma generate",
+    "db:migrate": "bunx --bun prisma migrate dev",
+    "db:seed": "bunx --bun prisma db seed",
+    "db:studio": "bunx --bun prisma studio"
   },
   "dependencies": {
     "@better-auth/stripe": "^1.6.23",
