@@ -8,8 +8,8 @@ import { sendWelcomeEmailAction } from "@/actions/send-welcome-email.action";
  *
  * @returns Object containing the mutation for sending welcome emails.
  * @example
- * const { sendWelcomeMutation } = useMailer();
- * sendWelcomeMutation.mutate();
+ * const { mutate, isPending } = useMailer();
+ * mutate();
  */
 export const useMailer = () => {
   const t = useTranslations("send-email");
