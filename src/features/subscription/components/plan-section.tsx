@@ -39,7 +39,7 @@ export async function PlanSection() {
 
   return (
     <section className="space-y-4 px-4 lg:px-6">
-      <Text variant="subtitle">{t("subscription.plan")}</Text>
+      <Text variant="heading-md">{t("subscription.plan")}</Text>
       {renderPlanView()}
     </section>
   );
