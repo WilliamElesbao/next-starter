@@ -1,7 +1,7 @@
 /**
  * Formats a product price from cents to readable currency string.
  *
- * @param product - Object with `currency` and `price` (in cents)
+ * @param product - Object with `currency` and `amount` (in cents)
  * @returns A string formatted according to locale and currency
  */
 export const formatPrice = ({
