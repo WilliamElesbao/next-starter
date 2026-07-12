@@ -37,6 +37,8 @@ export async function upgradeSubscriptionAction(
 }
 
 async function getStripeSubscriptionId(userId: string): Promise<string | null> {
+  "use cache";
+
   const subscription = await db.subscription.findFirst({
     where: { referenceId: userId, status: "active" },
     select: { stripeSubscriptionId: true },
