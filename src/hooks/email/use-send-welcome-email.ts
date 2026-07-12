@@ -12,7 +12,7 @@ import { sendWelcomeEmailAction } from "@/actions/send-welcome-email.action";
  * sendWelcomeMutation.mutate();
  */
 export const useMailer = () => {
-  const t = useTranslations("dashboard.toast.send-email");
+  const t = useTranslations("send-email");
 
   const sendWelcomeMutation = useMutation({
     mutationFn: () => sendWelcomeEmailAction(),
