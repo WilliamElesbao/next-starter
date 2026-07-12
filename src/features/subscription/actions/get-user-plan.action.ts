@@ -4,6 +4,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import { cacheKeys } from "@/constants/cache/cache-key";
 import { db } from "@/database/prisma-connection";
 import { env } from "@/env";
+import { getWhitelistedEmails } from "@/utils/get-whitelisted-emails";
 import { type ResolvedPlan, resolvePlan } from "../utils/plan-utils";
 
 export async function getUserPlan(
@@ -14,9 +15,7 @@ export async function getUserPlan(
   cacheTag(cacheKeys.userPlan(userId));
   cacheLife("hours");
 
-  const whitelistedEmails = env.WHITELISTED_EMAILS.split(",")
-    .map((e) => e.trim())
-    .filter(Boolean);
+  const whitelistedEmails = getWhitelistedEmails(env.WHITELISTED_EMAILS);
 
   const subscription = await db.subscription.findFirst({
     where: { referenceId: userId },
