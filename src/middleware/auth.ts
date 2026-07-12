@@ -64,7 +64,7 @@ export async function handleAuth(
   // ── Authenticated ────────────────────────────────────────────────────────
   // Landing page and auth routes redirect to the app for signed-in users
   if (isAuthRoute(pathname)) {
-    return redirectTo(`/${locale}/qr-builder`, request);
+    return redirectTo(`/${locale}/subscription`, request);
   }
 
   return response;
